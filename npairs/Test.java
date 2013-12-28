@@ -165,7 +165,7 @@ public class Test {
     	
         /*****************Reconstructing the dataloader object**************/        
         FileSystem fs1 = FileSystem.get(context.getConfiguration());
-        Path path = new Path(hadoopDirectory + "dataLoader.ser");
+        Path path = new Path("dataLoader.ser");
       
         InputStream in = fs1.open(path);
         ObjectInputStream objReader = new ObjectInputStream(in);
@@ -194,7 +194,7 @@ public class Test {
         in2.close();           
         /******************Reconstructing the splits object**************/
         FileSystem fs3 = FileSystem.get(new Configuration());
-        Path path3 = new Path(hadoopDirectory + "splits.ser");
+        Path path3 = new Path("splits.ser");
         InputStream in3 = fs3.open(path3);
         ObjectInputStream objReader3 = new ObjectInputStream(in3);
         int[][][] splits = null;
@@ -207,7 +207,7 @@ public class Test {
         in3.close();                
         /******************Reconstructing the fullDataAnalysis object**************/
         //FileSystem fs4 = FileSystem.get(new Configuration());
-        Path path4 = new Path(hadoopDirectory + "fullDataAnalysis.ser");
+        Path path4 = new Path("fullDataAnalysis.ser");
         InputStream in4 = fs3.open(path4);
         ObjectInputStream objReader4 = new ObjectInputStream(in4);
         Analysis fullDataAnalysis = null;    
