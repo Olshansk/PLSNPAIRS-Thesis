@@ -700,7 +700,7 @@ public class Npairsj  {
 		r2_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 		
 		for(int i = 0; i < numSlaves; i++){
-			String j = indexes[i];
+			String j = Test.shortenPath(indexes[i]);
 			FileInputStream fis = new FileInputStream("out_npairsj_ser/avgCVScoresTest_" + j);
 	        ObjectInputStream ois = new ObjectInputStream(fis);
 	       

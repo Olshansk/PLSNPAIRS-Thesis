@@ -43,6 +43,23 @@ public class Test {
 	public static String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	static String localDirectory = System.getProperty("user.dir" );
 
+	public static String shortenPath (Text value) {
+		String longPath = value.toString().trim();
+		System.out.println("OLSHANSKY longPath: " + longPath);
+		String [] allNums = longPath.split("_");
+		String shortPath = allNums[0] + "_to_" +allNums[allNums.length - 1];
+		System.out.println("OLSHANSKY longPath: " + shortPath);
+		return shortPath;
+	}
+	
+	public static String shortenPath (String longPath) {
+		System.out.println("OLSHANSKY longPath: " + longPath);
+		String [] allNums = longPath.split("_");
+		String shortPath = allNums[0] + "_to_" +allNums[allNums.length - 1];
+		System.out.println("OLSHANSKY longPath: " + shortPath);
+		return shortPath;
+	}
+	  
 	//ALan: note: it used to be non-static
 	private static Matrix getTrainCVScores(CVA cvaTrain, int[] trainDataVols, NpairsjSetupParams setupParams) {
 		Matrix cvsTr = cvaTrain.getCVScores();
@@ -512,7 +529,7 @@ public class Test {
         double sTime = System.currentTimeMillis();	
 		/******************Serialize objects*********************/
 		FileSystem fs4 = FileSystem.get(context.getConfiguration());
-		Path temp1 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgCVScoresTrain_" + value.toString().trim());
+		Path temp1 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgCVScoresTrain_" + Test.shortenPath(value));
 		ObjectOutputStream os1 = new ObjectOutputStream(fs4.create(temp1));
 		os1.writeObject(avgCVScoresTrain);
 		os1.flush();
