@@ -26,5 +26,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.16.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/MindSeer.jar"/>
+	<classpathentry kind="lib" path="/usr/local/hadoop-2.2.0/share/hadoop/common/hadoop-common-2.2.0.jar"/>
+	<classpathentry kind="lib" path="/usr/local/hadoop-2.2.0/share/hadoop/common/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="/usr/local/hadoop-2.2.0/share/hadoop/mapreduce/hadoop-mapreduce-client-core-2.2.0.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

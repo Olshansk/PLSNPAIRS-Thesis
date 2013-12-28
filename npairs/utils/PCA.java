@@ -1,5 +1,6 @@
 package npairs.utils;
 
+import java.io.Serializable;
 import java.io.IOException;
 
 import npairs.io.NpairsDataLoader;
@@ -29,7 +30,7 @@ import npairs.NpairsjSetupParams;
  * @version 1.0
  * 
  */
-public class PCA {
+public class PCA implements Serializable{
 	
 //		private boolean normalizeBySD = false; // if true, PC Scores are normalized by
 //											   // their standard deviations

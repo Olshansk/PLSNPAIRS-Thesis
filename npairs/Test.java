@@ -43,7 +43,6 @@ public class Test {
 	public static String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	static String localDirectory = System.getProperty("user.dir" );
 
-	
 	//ALan: note: it used to be non-static
 	private static Matrix getTrainCVScores(CVA cvaTrain, int[] trainDataVols, NpairsjSetupParams setupParams) {
 		Matrix cvsTr = cvaTrain.getCVScores();
