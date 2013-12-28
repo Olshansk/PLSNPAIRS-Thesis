@@ -40,9 +40,8 @@ public class Test {
 	public static Matrix[][] ppAllClasses;  
 	private static Matrix[] r2; 
 	
-	static String hadoopDirectory = "/user/hadoop/";
-	//Current working directory in local machine
-	static String localDirectory = "/home/hadoop/cluster/NPAIRS/";
+	public static String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
+	static String localDirectory = System.getProperty("user.dir" );
 
 	
 	//ALan: note: it used to be non-static

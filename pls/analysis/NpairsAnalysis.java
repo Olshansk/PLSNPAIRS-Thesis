@@ -33,7 +33,7 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 	String matlibType;
 	String matlibTypeForInitFeatSel;
 	//Alan
-	String hadoopDirectory = "/user/hadoop/";
+	String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	
 	int numNPAIRS = 1;
 	
