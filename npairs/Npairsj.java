@@ -26,6 +26,20 @@ import org.apache.hadoop.fs.Path;
 
 import npairs.Test;
 
+// Start imports for XML parsing (determine number of slaves dynamically)
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+// End imports for XML parsing
+
 public class Npairsj  {
 	
 	boolean debug = false;
@@ -478,7 +492,68 @@ public class Npairsj  {
 			output.println("[" + tTime + " s]");
 		}
 	}
+	/* 
+	 * The dfs.replication property in /hdfs-site.xml is supposed to equal the number of slaves in the hadoop job.
+	 * 
+	 * This method determines the number of slaves by firstly identifying the hadoop environment variable to get the location
+	 * of the hdfs-site.xml file. Depending on the hadoop version runnig (<2.x or >=2.x), the file is located in different
+	 * directories so that must also be checked. Once a full path to the file is determined, the XML file is parsed to determine
+	 * the replication info. 
+	 */
+	public static int getNumSlaves() {
+		try {
 
+			String hadoop_loc = "";
+
+			hadoop_loc = System.getenv().get("HADOOP_HOME");
+
+			if (hadoop_loc.length() == 0) {
+				hadoop_loc = System.getenv().get("HADOOP_PREFIX");
+			}
+
+			if (hadoop_loc.length() == 0) {
+				throw new Exception("Hadoop environment variables not found.");
+			}
+
+			String hdfs_loc = "";
+			Process process = Runtime.getRuntime().exec("hadoop version");
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String hadoop_version = stdInput.readLine().split(" ")[1];
+
+			if (hadoop_version.charAt(0) == '2') {
+				hdfs_loc = hadoop_loc + "/etc/hadoop/hdfs-site.xml";
+			} else {
+				hdfs_loc = hadoop_loc + "/conf/hdfs-site.xml";
+			}
+
+			if (hdfs_loc.length() == 0) {
+				throw new Exception("Hadoop version cannot be identified.");
+			}
+
+			File fXmlFile = new File(hdfs_loc);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+			NodeList nList = doc.getElementsByTagName("property");
+			for (int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.getElementsByTagName("name").item(0).getTextContent().equals("dfs.replication")) {
+						return Integer.parseInt(eElement.getElementsByTagName("value").item(0).getTextContent());
+					}
+				}
+			}
+			throw new Exception("dfs.replication is not specified in hdfs-site.xml.");
+		 }
+		 catch (Exception e) {
+			 e.printStackTrace();
+		 }
+		 return -1;
+	}
+		
+	
 	/** Runs split analyses and accumulates summary split results */
 	
 	private void runSplitAnalyses() throws NpairsjException, IOException {
@@ -562,8 +637,8 @@ public class Npairsj  {
 		double tTime = (System.currentTimeMillis() - sTime) / 1000;	
 		System.out.println("Serialization takes: " + tTime + "seconds in total");
 		
-		//Alan: TODO: dynamically determine the number of hadoop slaves, instead of hard-coding it
-		int numSlaves = 4;
+		int numSlaves = getNumSlaves();
+		System.out.println("Number of slaves: " + numSlaves);
 		
 		int numPerSlave = numSamples / numSlaves;
 		String[] indexes = new String[numSlaves]; 
