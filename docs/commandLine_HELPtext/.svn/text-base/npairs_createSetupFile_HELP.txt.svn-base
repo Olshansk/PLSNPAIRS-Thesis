@@ -1,0 +1,29 @@
+NPAIRS Create Analysis Setup Usage:
+-SESSION_FILES grp1file1,grp1file2 grp2file1,grp2file2... -- The list of session files. 
+Separate files within each group with commas; separate groups with spaces.
+-CLASS_SELECTION n1 n2 n3... -- Enter string of 1s and 0s separated by 
+whitespace to indicate whether to include each condition - e.g. 1 0 1 1 to include 1st, 3rd and 4th condition
+but not 2nd. Condition order is taken from session files (default: include all conditions).
+-BLOCK true/false -- True if Blocked fMRI; false if Event-related (default true).
+-DO_MSR true/false -- Remove mean session scan from data for each session before analysis (default true).
+-CVA_CLASSFILE filename -- File containing class info for the analysis. (Optional - default is 
+to get class info from session file condition info.) [Only applicable if you are doing Blocked NPAIRS with CVA.]
+-NORM_PCS true/false -- If true, normalize PC scores to have variance 1 before feeding into CVA (default false).
+-NUM_SPLITS integer -- Upper bound on the number of times to split the data during resampling (default 50).
+-SPLIT_TYPE typename -- What to use as splitting unit when resampling data.  Can be SESSION or RUN (default: SESSION).
+(Block fMRI only; split type must be SESSION for event-related fMRI NPAIRS.)
+-SPLITS_INFO_FILENAME filename -- The file from which to load splits information (i.e., which data volumes belong in each split half.). (Mutually exclusive with SPLIT_PARTITION option.)
+-SPLIT_PARTITION partition1 partition2 -- How many session files to include in each split half. Total must be <= no. input session files. (Mutually exclusive with SPLITS_INFO_FILENAME option.) (default: split session files as evenly as possible; in case no. session files N is odd, partition will be {(N-1)/2, (N+1)/2})
+-DO_INIT_EVD true/false -- If true, reduce the size of input data before analysis via an eigenvalue decomposition (default true).
+-EVD_FILE_PREFIX prefix -- The prefix for the file from which to load initial eigenvalue decomposition. Include this flag only if you want to load the EVD from existing files (default is to do it from scratch and save it). EVD files saved in an NPAIRS analysis have format prefix_NPAIRSJresult.evals/.evects.
+-DRF decimal number -- The data reduction factor to use (0.0 < DRF <= 1.0). DRF is the proportion of data dimensions to keep after EVD and pass on to the next analysis step (default = 0.3).
+-SET_PC_RANGE r1-r2 s m -- Set a range of how many PCs to pass into CVA after PCA. A new NPAIRS analysis is run for each no. of PCs.  Syntax: r1-r2 (no spaces around hyphen) s m where r1 is min no. PCs to use in split data analysis, r2 is max no. PCs for split data, s is range step & m is ratio of no. PCs to use in full data analysis (relative to no. PCs for split data). E.g. 10-20 5 2.0 ==> run 3 analyses: 
+(1) PCs (split data) = 1-10 & PCs (full data) = 1-20;
+(2) PCs (split data) = 1-15 & PCs (full data) = 1-30;
+(3) PCs (split data) = 1-20 & PCs (full data) = 1-40.
+-PCS_SPLIT regex -- The PCs to use for split data, e.g. 1-4,6,10-30 (no whitespace around hyphens). Ignored if SET_PC_RANGE set.
+-PCS_ALL_DATA regex -- The PCs to use for full data, e.g. 1-10,15,25-30 (no whitespace around hyphens). Ignored if SET_PC_RANGE set.
+-SAVE_LOTS true/false -- If true, save additional result files besides the summary .mat file (default false).
+-SAVE_SPLITS true/false -- If true and SAVE_LOTS is true, save results from each split analysis (default false).
+-RESULTS_FILE_PREFIX prefix -- Prefix for the results files (automatically appended with '_NPAIRSJresult' + file-specific extensions).  Include full path.
+-SETUP_FILE_PREFIX prefix -- Prefix for analysis setup file (automatically appended with either '_NPAIRSAnalysisSetup.mat' [Blocked fMRI] or '_NPAIRSAnalysisSetupER.mat' [Event-related fMRI]. Include full path.

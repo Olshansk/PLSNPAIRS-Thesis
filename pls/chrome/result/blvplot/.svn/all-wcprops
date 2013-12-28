@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1726/trunk/plsnpairs/pls/chrome/result/blvplot
+END
+ControlPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/ControlPanel.java
+END
+VolumeBrowserCellRenderer.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/740/trunk/plsnpairs/pls/chrome/result/blvplot/VolumeBrowserCellRenderer.java
+END
+ColorBar.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/2/trunk/plsnpairs/pls/chrome/result/blvplot/ColorBar.java
+END
+FilterBrowserItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1318/trunk/plsnpairs/pls/chrome/result/blvplot/FilterBrowserItem.java
+END
+VolumeBrowserLeafNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/pls/chrome/result/blvplot/VolumeBrowserLeafNode.java
+END
+VolumeBrowser.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/VolumeBrowser.java
+END
+BrainInfoPane.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/blvplot/BrainInfoPane.java
+END
+LabelPropertiesDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/blvplot/LabelPropertiesDialog.java
+END
+ImageMontagePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1653/trunk/plsnpairs/pls/chrome/result/blvplot/ImageMontagePanel.java
+END
+LeftSidePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/LeftSidePanel.java
+END
+FilterBrowserCellRenderer.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/740/trunk/plsnpairs/pls/chrome/result/blvplot/FilterBrowserCellRenderer.java
+END
+ColorGradientScheme.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/blvplot/ColorGradientScheme.java
+END
+ColorBarPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/ColorBarPanel.java
+END
+PlotTypeTabbedPane.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/1726/trunk/plsnpairs/pls/chrome/result/blvplot/PlotTypeTabbedPane.java
+END
+MaxMinThreshPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/465/trunk/plsnpairs/pls/chrome/result/blvplot/MaxMinThreshPanel.java
+END
+FilterBrowser.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/blvplot/FilterBrowser.java
+END
+CrosshairPropertiesDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/blvplot/CrosshairPropertiesDialog.java
+END
+CoordinatesPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/CoordinatesPanel.java
+END
+NumbersPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/blvplot/NumbersPanel.java
+END
+BrainLatentVariablesPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/1429/trunk/plsnpairs/pls/chrome/result/blvplot/BrainLatentVariablesPlot.java
+END
+ColourScalePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1318/trunk/plsnpairs/pls/chrome/result/blvplot/ColourScalePanel.java
+END
+ColorGradient.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/blvplot/ColorGradient.java
+END
+BrainImage.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/blvplot/BrainImage.java
+END

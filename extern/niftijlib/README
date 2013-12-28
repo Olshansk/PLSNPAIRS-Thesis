@@ -1,0 +1,5 @@
+niftijlib-0.2.1
+
+Beta 0.2 Modified Mar 20 2006 (see Nifti1Dataset documentation)
+0.2.1 Modified Feb 26 2009 - Anita Oder: added get methods for dims X,Y,Z,T
+ 

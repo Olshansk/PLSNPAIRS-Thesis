@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/1744/trunk/plsnpairs/pls/chrome/result/view
+END
+PredictionPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/1744/trunk/plsnpairs/pls/chrome/result/view/PredictionPlot.java
+END
+StatisticalBarChartDemo.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/chrome/result/view/StatisticalBarChartDemo.java
+END
+AbstractPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/AbstractPlot.java
+END
+BrainDesignScoresPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/view/BrainDesignScoresPlot.java
+END
+NpairsCvScoresPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1475/trunk/plsnpairs/pls/chrome/result/view/NpairsCvScoresPlot.java
+END
+ScatterPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/762/trunk/plsnpairs/pls/chrome/result/view/ScatterPlot.java
+END
+ChartPersistence.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/ChartPersistence.java
+END
+RegressionItemGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/1318/trunk/plsnpairs/pls/chrome/result/view/RegressionItemGenerator.java
+END
+DesignLatentVariablesPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/1347/trunk/plsnpairs/pls/chrome/result/view/DesignLatentVariablesPlot.java
+END
+PermutedSingularValuesPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/473/trunk/plsnpairs/pls/chrome/result/view/PermutedSingularValuesPlot.java
+END
+TemporalBrainScoresPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/1634/trunk/plsnpairs/pls/chrome/result/view/TemporalBrainScoresPlot.java
+END
+testRegressionPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/testRegressionPlot.java
+END
+BrainBehavScoresPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1429/trunk/plsnpairs/pls/chrome/result/view/BrainBehavScoresPlot.java
+END
+PercentCrossblockCovariancePlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/616/trunk/plsnpairs/pls/chrome/result/view/PercentCrossblockCovariancePlot.java
+END
+ObservedSingularValuesPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/616/trunk/plsnpairs/pls/chrome/result/view/ObservedSingularValuesPlot.java
+END
+TemporalBrainCorrelationPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/1634/trunk/plsnpairs/pls/chrome/result/view/TemporalBrainCorrelationPlot.java
+END
+PredictionRegression.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/PredictionRegression.java
+END
+XYPlotChild.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/chrome/result/view/XYPlotChild.java
+END
+ResponseFunctionPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/view/ResponseFunctionPlot.java
+END
+AttachDetachOption.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1429/trunk/plsnpairs/pls/chrome/result/view/AttachDetachOption.java
+END
+ReproducibilityPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/ReproducibilityPlot.java
+END
+ResultContrastPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1634/trunk/plsnpairs/pls/chrome/result/view/ResultContrastPanel.java
+END
+ObservedEigenvaluePlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/1475/trunk/plsnpairs/pls/chrome/result/view/ObservedEigenvaluePlot.java
+END
+RegressionPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/RegressionPlot.java
+END
+VoxelIntensityResponsePlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/view/VoxelIntensityResponsePlot.java
+END
+AbstractFunctionalPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/1429/trunk/plsnpairs/pls/chrome/result/view/AbstractFunctionalPlot.java
+END
+EnhancedXY.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/view/EnhancedXY.java
+END
+DesignScoresPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/view/DesignScoresPlot.java
+END
+TaskPLSwithCIPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/1452/trunk/plsnpairs/pls/chrome/result/view/TaskPLSwithCIPlot.java
+END
+ReproducibilityPredictionPlot.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/ReproducibilityPredictionPlot.java
+END
+RegressionDataItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/view/RegressionDataItem.java
+END
+RegressionOptions.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/1726/trunk/plsnpairs/pls/chrome/result/view/RegressionOptions.java
+END

@@ -1,0 +1,233 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp
+END
+ParabolicFit.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/ParabolicFit.java
+END
+Powell.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Powell.java
+END
+MutualInformationStack.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/MutualInformationStack.java
+END
+SimulatedAnnealing.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/SimulatedAnnealing.java
+END
+SliceFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/SliceFunction.java
+END
+Registration.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Registration.java
+END
+StackFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/StackFunction.java
+END
+Alignment.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Alignment.java
+END
+UserEscapeException.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/UserEscapeException.java
+END
+BracketMin.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/BracketMin.java
+END
+Reorient.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Reorient.java
+END
+Affine.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Affine.java
+END
+ImagePlusPlus.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/ImagePlusPlus.java
+END
+SVD.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/SVD.java
+END
+CorrelationCoefSlice.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/CorrelationCoefSlice.java
+END
+History.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/History.java
+END
+Vector.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Vector.java
+END
+CorrelationCoefStack.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/CorrelationCoefStack.java
+END
+Matrix.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Matrix.java
+END
+Display.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Display.java
+END
+EulerAngles.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/EulerAngles.java
+END
+WellFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/WellFunction.java
+END
+AbsoluteDifferenceSlice.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/AbsoluteDifferenceSlice.java
+END
+Brent.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Brent.java
+END
+Handedness.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Handedness.java
+END
+Convolution.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Convolution.java
+END
+AbsoluteDifferenceStack.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/AbsoluteDifferenceStack.java
+END
+External.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/External.java
+END
+ShowSlices.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/ShowSlices.java
+END
+Polynomial.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Polynomial.java
+END
+QuickSort.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/QuickSort.java
+END
+Quaternion.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Quaternion.java
+END
+Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Function.java
+END
+Eigen.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/Eigen.java
+END
+ImageFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/ImageFunction.java
+END
+DoOption.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/DoOption.java
+END
+MutualInformationSlice.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/MutualInformationSlice.java
+END
+ImageSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/alignstacks/align3tp/ImageSet.java
+END

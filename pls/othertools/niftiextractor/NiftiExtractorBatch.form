@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="dataRadioGroup">
+    </Component>
+    <Menu class="javax.swing.JMenuBar" name="fileMenu">
+      <SubComponents>
+        <Menu class="javax.swing.JMenu" name="menuBar">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="File"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="loadMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+L"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Load"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="extractMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+E"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Extract"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="extractMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="clearMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Alt+C"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clear"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Alt+X"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Exit"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="switchViewMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PLS extractor"/>
+          </Properties>
+          <Events>
+            <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="switchViewMenuMenuSelected"/>
+          </Events>
+        </Menu>
+      </SubComponents>
+    </Menu>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="NPAIRS Nifti Extractor"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="menuBar" type="java.lang.String" value="fileMenu"/>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="cvRangeLabel" alignment="0" max="32767" attributes="1"/>
+                      <Component id="filePathLabel" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pcRangeLabel" alignment="0" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="lagLabel" alignment="0" max="32767" attributes="1"/>
+                      <Component id="dataTypeLabel" alignment="0" min="-2" max="-2" attributes="1"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lagText" alignment="0" min="-2" pref="332" max="-2" attributes="1"/>
+                  <Group type="102" alignment="0" attributes="1">
+                      <Component id="datatype1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="datatype2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="datatype3" pref="158" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="filepathField" alignment="0" pref="332" max="32767" attributes="1"/>
+                  <Component id="cvTextField" alignment="0" pref="332" max="32767" attributes="1"/>
+                  <Component id="pcTextField" alignment="0" pref="332" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="selectSetButton" pref="111" max="32767" attributes="1"/>
+                  <Component id="extractButton" alignment="0" pref="111" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="filePathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="filepathField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="selectSetButton" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="pcRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="pcTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cvRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cvTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="dataTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="datatype1" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="datatype2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="datatype3" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lagLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lagText" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="extractButton" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="filePathLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="File path:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="filepathField">
+      <Properties>
+        <Property name="columns" type="int" value="25"/>
+        <Property name="text" type="java.lang.String" value="Enter filepath here complete with wildcard."/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[10, 27]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cvRangeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CV:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="cvTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Enter the desired CV"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lagLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Lag:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="lagText">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="dataTypeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Datatype:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="datatype1">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="dataRadioGroup"/>
+        </Property>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Zscore"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="datatype2">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="dataRadioGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Avg Canon"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="datatype3">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="dataRadioGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Full Ref"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="pcRangeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="PC Range:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="pcTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Enter the pc range"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="extractButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Extract"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="extractButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="selectSetButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Select set"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectSetButtonActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

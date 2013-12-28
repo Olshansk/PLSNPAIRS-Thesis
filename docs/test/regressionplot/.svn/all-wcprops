@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot
+END
+testresults
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/testresults
+END
+test1matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/test1matlab.png
+END
+test2matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/test2matlab.png
+END
+test1java.png
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/test1java.png
+END
+rtest1matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest1matlab.png
+END
+test2java.png
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/test2java.png
+END
+rtest2matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest2matlab.png
+END
+rtest1java.png
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest1java.png
+END
+rtest3matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest3matlab.png
+END
+rtest2java.png
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest2java.png
+END
+rtest3java.png
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest3java.png
+END
+rtest4matlab.png
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest4matlab.png
+END
+rtest4java.png
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1318/trunk/plsnpairs/docs/test/regressionplot/rtest4java.png
+END

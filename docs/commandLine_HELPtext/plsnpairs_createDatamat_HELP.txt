@@ -1,0 +1,7 @@
+Create Datamat Usage:
+-SESSION_FILE filename -- The session profile that will be used to create this datamat.
+-COORD_THRESH x.xx -- Threshold to exclude voxels if no mask provided in session file (default 0.15).
+-NORM_MEAN_VOL true/false -- If true, normalize data using the mean brain volume (default false).
+-WINDOW_SIZE number -- The window (lag) size in no. of scans (Only required for Event-related analyses; default = 8)
+-NORM_REF_SCANS true/false -- If true, normalize data using ref. scans (default true).
+-SINGLE_SUBJECT true/false -- If true, format this datamat for single-subject analysis (default false).

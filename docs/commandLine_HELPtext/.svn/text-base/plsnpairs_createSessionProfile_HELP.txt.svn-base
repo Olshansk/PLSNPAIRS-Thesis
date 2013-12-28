@@ -1,0 +1,24 @@
+Create Session Profile Usage:
+-SESSION_FILE_PREFIX text -- The file prefix for the session file to be created.
+-SESSION_FILE_DIR text -- The directory where the session file is to be saved 
+(optional; default is to save in path indicated in SESSION_FILE_PREFIX or current working directory if no path given).
+-DESCRIPTION text -- An optional description of the session file.
+-DATAMAT_PREFIX text -- File prefix (no path) for the datamat file to be created from this session file.
+(Default (Block fMRI NPAIRS): datamat prefix == session file prefix; required input in all other cases.)
+-BLOCK true/false -- True if Blocked fMRI; false if Event-related (default false). 
+-BRAIN_MASK_FILE text -- The name of the mask file to use if using a brain mask.
+(Required for Block fMRI NPAIRS; optional in all other cases.)
+-USE_MASK_FILE true/false -- Optional. This is set to false by default. If -BRAIN_MASK_FILE is set, then -USE_MASK_FILE is set to true automatically.  This flag would generally only be used when loading existing session file and changing -USE_MASK_FILE to false.
+-MERGE_ACROSS_RUNS true/false -- If true, merge data across all runs (default true); if false, merge data within runs only. 
+ (Not used in Block NPAIRS.)
+-CONDITION_INFO cond1info cond2info cond3info ... -- Name and ref. scan info for each condition. 
+ Syntax (Block fMRI NPAIRS): condXinfo = condXname
+ Syntax (every other case): condXinfo = condXname,R,L   (R = 1st ref. scan (0-relative); L = no. ref. scans)
+-DATA_FILES run1file1,run1file2 run2file1,run2file2 ... -- Lists of image files to include. These files will be relative to the DATA_PATHS parameter. Separate files within runs with commas; separate runs with spaces.
+-DATA_PATHS path_run1 path_run2 path_run3 ... -- List of data paths - 1 for each run.
+-ONSETS 1,2,3:2,3,4:4,5,6 2,3,4:5,6,7:8 ... -- Lists of condition onsets (where 'onset' = 1st scan in condition epoch). Separate onsets with commas (,) and conditions with colons (:). Separate runs with spaces. Scan numbers are 0-relative.
+-BLOCK_LENGTHS 1,2,3:2,3,4:4,5,6 2,3,4:5,6,7:8 ... -- Lists of lengths (in no. scans) of each condition block. Separate blocks for each condition with commas (,) and conditions with colons (:). Separate runs with spaces. (Only used in Block analyses.)
+-ONSET_FILES onsetsRun1 onsetsRun2 ... -- List of textfiles containing condition onset and (for Block fMRI) length information. See user guide for file syntax details. (Optional - default is to enter onsets using -ONSETS flag and lengths using -BLOCK_LENGTHS flag.)
+-CHANGE_DATA_PATH newpath -- Include this flag and -ORIG_FILE_PREFIX to load an existing session file and change the data path to 'newpath'. See -ORIG_FILE_PREFIX.
+-ORIG_FILE_PREFIX filename -- Session file to load. Must include -BLOCK flag (if true) when using this flag. Use this flag to load existing session, make changes and save altered session file as '[SESSION_FILE_DIR]SESSION_FILE_PREFIX'. 
+Currently available changes: -DESCRIPTION, -DATAMAT_PREFIX, -BRAIN_MASK_FILE, -USE_MASK_FILE, -MERGE_ACROSS_RUNS, -CHANGE_DATA_PATH.

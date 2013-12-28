@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/1780/trunk/plsnpairs/pls/test
+END
+NpairsAnalysisTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/950/trunk/plsnpairs/pls/test/NpairsAnalysisTest.java
+END
+IterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/test/IterTest.java
+END
+NiftiDataLoadTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1203/trunk/plsnpairs/pls/test/NiftiDataLoadTest.java
+END
+EnumTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/test/EnumTest.java
+END
+MatrixTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1751/trunk/plsnpairs/pls/test/MatrixTest.java
+END
+CollapsibleListTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/631/trunk/plsnpairs/pls/test/CollapsibleListTest.java
+END
+CorrMatTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/952/trunk/plsnpairs/pls/test/CorrMatTest.java
+END
+ChiSqrTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/test/ChiSqrTest.java
+END
+SessionDatamatPrefixTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/test/SessionDatamatPrefixTest.java
+END
+SessionProfileDatamatPrefix.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/test/SessionProfileDatamatPrefix.java
+END
+MemTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2/trunk/plsnpairs/pls/test/MemTest.java
+END
+EVDTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/1780/trunk/plsnpairs/pls/test/EVDTest.java
+END

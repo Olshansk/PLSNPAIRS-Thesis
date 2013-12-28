@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/filters
+END
+FiltersObserver.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/controller/observer/filters/FiltersObserver.java
+END
+BrainFilterEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/740/trunk/plsnpairs/pls/chrome/result/controller/observer/filters/BrainFilterEvent.java
+END
+ViewedLvsEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/filters/ViewedLvsEvent.java
+END
+SliceFiltersEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/filters/SliceFiltersEvent.java
+END
+IncorrectLagsSelectedEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/1285/trunk/plsnpairs/pls/chrome/result/controller/observer/filters/IncorrectLagsSelectedEvent.java
+END

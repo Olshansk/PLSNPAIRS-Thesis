@@ -1,0 +1,172 @@
+Note: when you see 'input lag:1' that means lag #0 in the java scatterplot.
+
+Test #1
+
+y246_NPAIRSJresult.mat average z-score CV #1 lag #0
+y246_5cond_NPAIRSJresult.mat average z-score CV #2 lag #0
+
+
+>> sca
+
+ans =
+
+Extracting from file y246_NPAIRSJresult.mat
+
+input cv:1
+input lag:1
+
+ans =
+
+Extracting from file y246_5cond_NPAIRSJresult.mat
+
+input cv:2
+input lag:1
+
+ans =
+
+    1.0000    0.0807
+    0.0807    1.0000
+
+Test #2
+
+y246_NPAIRSJresult.mat average z-score CV #1 lag #0
+y246_5cond_NPAIRSJresult.mat average z-score CV #3 lag #0
+
+>> sca
+
+ans =
+
+Extracting from file y246_NPAIRSJresult.mat
+
+input cv:1
+input lag:1
+
+ans =
+
+Extracting from file y246_5cond_NPAIRSJresult.mat
+
+input cv:3
+input lag:1
+
+ans =
+
+   1.000000000000000   0.203345443338013
+   0.203345443338013   1.000000000000000
+
+Test #3
+
+y246_NPAIRSJresult.mat average z-score CV #1 lag #0
+y246_5cond_NPAIRSJresult.mat average canonical eigenimage CV #4 lag #0
+
+>> sca
+
+ans =
+
+Extracting from file y246_NPAIRSJresult.mat
+
+input cv:1
+input lag:1
+
+ans =
+
+Extracting from file y246_5cond_NPAIRSJresult.mat
+
+input cv:4
+input lag:1
+
+ans =
+
+   1.000000000000000  -0.200553542226485
+  -0.200553542226485   1.000000000000000
+
+Test #4
+
+10subj_30cls_allRuns_3splits_020pc_NPAIRSjresult.mat Average Z-Score CV #2 Lag#1
+20subj_3cls_java_fMRIresult.mat Brain LV Plot LV#1 Lag #0
+
+ans =
+
+   1.000000000000000   0.006054410767136
+   0.006054410767136   1.000000000000000
+
+Test #5
+
+10subj_30cls_allRuns_3splits_020pc_NPAIRSjresult.mat Average Z-Score CV #5 Lag#1
+20subj_3cls_java_fMRIresult.mat BootStrap Ratio LV#3 Lag #4
+
+>> sca
+
+ans =
+
+Extracting from file 10subj_30cls_allRuns_3splits_020pc_NPAIRSJresult.mat
+
+input cv:5
+input lag:1
+
+ans =
+
+Extracting from file 20subj_3cls_java_fMRIresult.mat
+
+input cv:3
+input lag:4
+
+ans =
+
+   1.000000000000000  -0.022070882866466
+  -0.022070882866466   1.000000000000000
+
+Test #6
+
+2grp_10subj_3cls_2runs_fMRIresult.mat Brain Lv LV #2 Lag #4
+10subj_30cls_allRuns_3splits_020pc_NPAIRSjresult.mat Average Z-Score CV #3 Lag#0
+
+>> sca
+
+ans =
+
+Extracting from file 2grp_10subj_3cls_2runs_fMRIresult.mat
+
+input cv:2
+input lag:5
+
+ans =
+
+Extracting from file 10subj_30cls_allRuns_3splits_020pc_NPAIRSJresult.mat
+
+input cv:3
+input lag:1
+
+ans =
+
+   1.000000000000000  -0.237929646633131
+  -0.237929646633131   1.000000000000000
+
+Test #7
+
+20subj_3cls_java_fMRIresult.mat Brain LV LV #1 Lag #0
+2grp_10subj_3cls_2runs_fMRIresult.mat Brain LV LV #3 Lag #2
+
+>> sca
+
+ans =
+
+Extracting from file 20subj_3cls_java_fMRIresult.mat
+
+input cv:1
+input lag:1
+
+ans =
+
+Extracting from file 2grp_10subj_3cls_2runs_fMRIresult.mat
+
+input cv:3
+input lag:3
+
+ans =
+
+   1.000000000000000   0.003510989956120
+   0.003510989956120   1.000000000000000
+
+All correlation values match as well as the graphs.
+
+

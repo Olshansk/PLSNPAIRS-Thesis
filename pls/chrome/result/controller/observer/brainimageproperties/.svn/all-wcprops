@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties
+END
+UseLabelsEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/UseLabelsEvent.java
+END
+BrainImagePropertiesObserver.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/BrainImagePropertiesObserver.java
+END
+CrosshairColourEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/CrosshairColourEvent.java
+END
+BackgroundImageEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/BackgroundImageEvent.java
+END
+UseDescriptionLabelsEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/UseDescriptionLabelsEvent.java
+END
+BrainImagePropertiesAdaptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/BrainImagePropertiesAdaptor.java
+END
+LabelsColourEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/LabelsColourEvent.java
+END
+CrosshairTransparencyEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/CrosshairTransparencyEvent.java
+END
+UseCrosshairEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/UseCrosshairEvent.java
+END
+LabelsTransparencyEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/brainimageproperties/LabelsTransparencyEvent.java
+END

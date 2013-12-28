@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/1802/trunk/plsnpairs
+END
+LICENCE.TXT
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/234/trunk/plsnpairs/LICENCE.TXT
+END
+.classpath
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/1751/trunk/plsnpairs/.classpath
+END
+make_fatjar_pallene.xml
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/1655/trunk/plsnpairs/make_fatjar_pallene.xml
+END
+make_fatjar.xml
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/1015/trunk/plsnpairs/make_fatjar.xml
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/3/trunk/plsnpairs/.project
+END
+.fatjar
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/732/trunk/plsnpairs/.fatjar
+END
+make_fatjar_thebe.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/810/trunk/plsnpairs/make_fatjar_thebe.xml
+END

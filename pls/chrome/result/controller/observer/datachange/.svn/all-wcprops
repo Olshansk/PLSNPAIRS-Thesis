@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange
+END
+FlipVolumeEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange/FlipVolumeEvent.java
+END
+InvertedLvEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/561/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange/InvertedLvEvent.java
+END
+LoadedVolumesEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange/LoadedVolumesEvent.java
+END
+DataChangeObserver.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/577/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange/DataChangeObserver.java
+END
+DataChangeAdaptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/chrome/result/controller/observer/datachange/DataChangeAdaptor.java
+END

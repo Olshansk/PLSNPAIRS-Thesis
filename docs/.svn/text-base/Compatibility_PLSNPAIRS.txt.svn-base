@@ -1,0 +1,158 @@
+October 16 2008
+
+(A) Consider use cases for Blocked fMRI session files in PLS/NPAIRS:
+
+1.  User creates PLS session files in Java (PSFJ)
+	Runs PLS in Java using PSFJ.
+	Runs PLS in Matlab using PSFJ.
+	
+2.  User creates PLS session files in Matlab (PSFM)
+	Runs PLS in Matlab using PSFM.
+	Runs PLS in Java using PSFM.
+
+----------------------------------------	
+	Note that currently PSFM == PSFJ, 
+	i.e. session files generated in
+	PLS Java and PLS Matlab are exactly the same.
+----------------------------------------
+	
+3.  User creates NPAIRS session files in Java (NSFJ)
+	Runs NPAIRS in Java using NSFJ.
+	  
+4.  User wants to run NPAIRS given PLS session file.
+
+	Two possible scenarios - Manual and Automatic:
+	
+	4.1 Manual: User loads each PLS session file into NPAIRS session file window,
+		fills in missing 2 fields manually and saves as NSFJ.
+	
+		This can currently be done with both PSFJ and PSFM.
+	
+	4.2 Automatic: Instead of explicitly saving NSFJ first, user enters 
+		PLS session files directly into NPAIRS Analysis. 
+			 
+		This is not currently implemented.  
+			 
+		Info required for NPAIRS that is not currently saved in PSFJ:
+	
+		(a) number of scans skipped at beginning
+		(b) which runs skipped
+	
+		Currently, NPAIRS session files contain this info in 2 variables not 
+		included in a PLS session file.
+	
+		* Note that this information could be ignored if we assume default settings
+		 for an NPAIRS analysis, e.g.: 
+		(i)  that all runs included in a given session file are to be included in 	
+		 	 the NPAIRS analysis
+		(ii) that any scans to be excluded at the beginning of the runs have been
+	    	 excluded also from condition onset information for each run
+	     	 (e.g. if first 5 scans are to be excluded, then no onset lists should
+	     	 include scan numbers 0-4).
+	     	
+	   4.2.1 User enters PSFM directly into NPAIRS Analysis.
+	   		 
+	   		 This can be implemented by ignoring the 2 missing 
+	   		 variables as described above (see *).
+	   		 	   		   
+	   		 Note that satisfying case 4.2.1 implies 4.2.2 is also satisfied,
+	   		 since PSFJ would also automatically be readable in NPAIRS Analysis.
+	   		 
+	   4.2.2 User enters PSFJ directly into NPAIRS Analysis.
+	   		
+	   		 This can be implemented either as described in (4.2.1) for PSFM,
+	   		 or, if we do not care about case 4.2.1, we can simply add 
+	   		 the 2 missing fields to all PSFJ whenever they're generated.
+	   		 This will not change PSFJ compatibility with Matlab PLS, as the
+	   		 2 additional fields will simply be ignored by Matlab. 
+	   		 
+	  Consider (4.2.1 vs 4.2.2) the likelihood of someone using Matlab-generated 
+	  PLS session files to run either PLS or NPAIRS in Java... [NOT VERY HIGH?]
+	  
+	  Consider also that 4.2.2 is marginally less complicated to implement.
+	  
+	  ------------------------------------------------------
+	  
+5. User wants to run PLS given NPAIRS session file.
+
+   Two possible scenarios - Manual and Automatic:
+   
+   5.1 Manual: User loads each NPAIRS session file into PLS session file window,
+   		fills in missing fields manually and saves as PSFJ.
+   		
+   		This can currently be done in both Java and Matlab PLS.
+   		
+   5.2 Automatic: Instead of explicitly saving PSFJ first, user enters 
+		NPAIRS session files directly into PLS Analysis in Matlab or Java.
+			 
+		This is not currently implemented.  
+			 
+		Variables required for PLS that are not currently saved in NSFJ:
+	
+		datamat_prefix 
+		pls_data_path
+		across_run
+			
+		The only non-trivial default setting that needs to be considered is for 
+		'across_run', a boolean indicating whether conditions are to be merged
+		across runs.  Note that PLS default is to merge across runs.
+		
+
+(B) Consider use cases for NPAIRS and PLS result files.
+
+1. User wants to display Matlab PLS results in Matlab or Java.
+
+   Currently implemented.
+   		
+2. User wants to display Java PLS results in Java or Matlab.
+
+   Currently implemented.
+   
+3. User wants to display Java NPAIRS results in Java.
+   
+   Currently implemented.
+   
+4. User wants to display Java NPAIRS results in Matlab
+	or Java PLS results viewer.
+
+   Currently implemented: can view a subset of NPAIRS results,
+   namely full-data analysis eigenimages (as 'Brain LV'), CV
+   eigenvalues (as 'Observed Singular Values') and average full-data
+   CV Scores per CV class (as 'Design Latent Variables').
+   Remaining plots and variables displayed in PLS results viewer when
+   reading NPAIRS result file are meaningless.
+
+   Consider: which NPAIRS results should be viewable in the PLS viewer?
+   Should we save average Z-Scored eigenimages and average training or test
+   CV scores as 'Design Latent Variables' instead?  
+
+5. User wants to display NPAIRS results in idl NPAIRS:
+
+	Currently, NPAIRS Java output includes for each split many textfiles that are 
+	similar to idl NPAIRS output; eigenimages are not currently output in 
+	VAPET format, but all output files, including eigenimages, can be read 
+	in using idl and manipulated fairly easily into the right format for use
+	in many NPAIRS idl results display routines.  Only useful for someone familiar
+	with idl NPAIRS code.  
+	
+	Ensuring compatibility on a high level with idl NPAIRS results format would be 
+	quite an extensive task.  If it is important that people unfamiliar with idl 
+	programming be able to view Java NPAIRS results using idl NPAIRS tools, it would
+	probably be easiest and fastest to write a handful of idl procedures for reading
+	the output files, formatting the data and calling the desired NPAIRS idl display tool. 
+    
+--------------------------------------------------------------------
+
+   
+   
+		
+   
+   
+	  
+	     
+	
+	
+		
+	
+	
+	

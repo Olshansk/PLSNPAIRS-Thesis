@@ -1,0 +1,37 @@
+#! /bin/sh -f
+
+# This makefile builds JMatLink library on linux
+# Chase Krumpelman 2/1/03
+# based on Solaris make file by
+# Christian Schaffner 12/12/00 
+
+
+CC=gcc
+LD=ld 
+javac=/usr/java/jdk1.5.0_06/bin/javac
+
+# MATLAB
+MATLAB=/software/Matlab74
+## (Anita) argh.  NOTE that as of Matlab7, libeng.so etc are in
+#  /bin/glnx*/, NOT in /extern/lib/glnx*/.  
+MLIB=-L${MATLAB}/bin/glnxa64
+MINCLUDE=-I${MATLAB}/extern/include 
+
+# JAVA
+JAVA=/usr/java/jdk1.5.0_06
+JINCLUDE=-I${JAVA}/include -I${JAVA}/include/linux
+
+libJMatlink.so  : JMatLink.o
+	${LD} -G ${MLIB} -leng -lmx -o libJMatLink.so JMatLink.o
+
+JMatLink.o      : JMatLink.c JMatLink.h
+	${CC} -fPIC -c -shared ${JINCLUDE} ${MINCLUDE} JMatLink.c
+
+clean:
+	rm -f *.class
+
+TestGui: TestGui.java JMatLink.java
+	javac JMatLink.java
+	javac TestGui.java
+	
+

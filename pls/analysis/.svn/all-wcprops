@@ -1,0 +1,275 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/1783/trunk/plsnpairs/pls/analysis
+END
+ComputeNonRotatedBehavPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeNonRotatedBehavPls.java
+END
+NpairsAnalysis.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/1783/trunk/plsnpairs/pls/analysis/NpairsAnalysis.java
+END
+ComputeBehaviorPermutationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeBehaviorPermutationPls.java
+END
+PermutationResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/PermutationResult.java
+END
+ComputeBehaviorBootstrapPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/1447/trunk/plsnpairs/pls/analysis/ComputeBehaviorBootstrapPls.java
+END
+RRIIsLowVariability.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/RRIIsLowVariability.java
+END
+RRIXCorr.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRIXCorr.java
+END
+BootstrapResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/BootstrapResult.java
+END
+ComputeNonrotatedTaskPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/ComputeNonrotatedTaskPls.java
+END
+RRIBootstrapSamples.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRIBootstrapSamples.java
+END
+ResultSaver.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1712/trunk/plsnpairs/pls/analysis/ResultSaver.java
+END
+ComputeBehaviorPlsMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeBehaviorPlsMain.java
+END
+RRITaskMean.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRITaskMean.java
+END
+ConcatenateDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1479/trunk/plsnpairs/pls/analysis/ConcatenateDatamat.java
+END
+ComputeNonRotatedTaskPlsMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/810/trunk/plsnpairs/pls/analysis/ComputeNonRotatedTaskPlsMain.java
+END
+ComputeMultiblockPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/ComputeMultiblockPls.java
+END
+Analysis.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/Analysis.java
+END
+RRIBootstrapProcrustes.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRIBootstrapProcrustes.java
+END
+ComputeNonRotatedBehavPermutationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeNonRotatedBehavPermutationPls.java
+END
+RRIBootstrapCheck.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRIBootstrapCheck.java
+END
+ExpandDesignScores.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/ExpandDesignScores.java
+END
+PetResultSaver.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/1634/trunk/plsnpairs/pls/analysis/PetResultSaver.java
+END
+MaskEventList.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/MaskEventList.java
+END
+GroupDeviationData.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/GroupDeviationData.java
+END
+ConcatenateFmriBehavioralDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/1369/trunk/plsnpairs/pls/analysis/ConcatenateFmriBehavioralDatamat.java
+END
+ComputeNonRotatedBehavBootstrapPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeNonRotatedBehavBootstrapPls.java
+END
+ConcatenateFmriDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1369/trunk/plsnpairs/pls/analysis/ConcatenateFmriDatamat.java
+END
+ComputeDeviationPlsMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/810/trunk/plsnpairs/pls/analysis/ComputeDeviationPlsMain.java
+END
+RRICorrMaps.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRICorrMaps.java
+END
+ComputeNonRotatedBehavPlsMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeNonRotatedBehavPlsMain.java
+END
+ComputeNonRotatedTaskPermutationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/ComputeNonRotatedTaskPermutationPls.java
+END
+ComputeMultiblockPermutationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/810/trunk/plsnpairs/pls/analysis/ComputeMultiblockPermutationPls.java
+END
+ComputeNonRotatedTaskBootstrapPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/ComputeNonRotatedTaskBootstrapPls.java
+END
+ComputeBehaviorPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ComputeBehaviorPls.java
+END
+RRICorrMapsNotAll.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRICorrMapsNotAll.java
+END
+ComputeMultiblockBootstrapPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/810/trunk/plsnpairs/pls/analysis/ComputeMultiblockBootstrapPls.java
+END
+RRIPermutationOrder.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/RRIPermutationOrder.java
+END
+NpairsResultSaverPrep.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1748/trunk/plsnpairs/pls/analysis/NpairsResultSaverPrep.java
+END
+ComputeMultiblockPlsMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/810/trunk/plsnpairs/pls/analysis/ComputeMultiblockPlsMain.java
+END
+ComputeDeviationPermutationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/969/trunk/plsnpairs/pls/analysis/ComputeDeviationPermutationPls.java
+END
+RRIBootstrapOrder.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/RRIBootstrapOrder.java
+END
+ConcatenatePetDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/1327/trunk/plsnpairs/pls/analysis/ConcatenatePetDatamat.java
+END
+RRIGetBehaviorScores.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/RRIGetBehaviorScores.java
+END
+ComputeDeviationBootstrapPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1202/trunk/plsnpairs/pls/analysis/ComputeDeviationBootstrapPls.java
+END
+ComputeDeviationPls.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/2/trunk/plsnpairs/pls/analysis/ComputeDeviationPls.java
+END

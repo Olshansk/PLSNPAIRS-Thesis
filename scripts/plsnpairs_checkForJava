@@ -1,0 +1,17 @@
+# 29/09/2009 - ao - changed 'm' to 'M' in javaMem string
+# 01/10/2009 - ao - changed default javaMem value to 512M instead of 1G
+
+checkForJava() {
+	if [ -z `which java` ]; then
+		echo "Couldn't find Java in your path.  PLS/NPAIRS requires Java to run."
+		return 1
+	fi
+	
+	if [ -z $PLSNPAIRS_JARPATH ]; then
+		echo "Couldn't find the PLS/NPAIRS jar file.  Please set the PLSNPAIRS_JARPATH environment variable."
+		return 1
+	fi
+	
+	javaMem="512M"
+	return 0
+}

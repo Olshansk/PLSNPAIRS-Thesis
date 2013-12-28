@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext
+END
+plsnpairs_createDatamat_HELP.txt
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext/plsnpairs_createDatamat_HELP.txt
+END
+plsnpairs_runAnalyses_HELP.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext/plsnpairs_runAnalyses_HELP.txt
+END
+npairs_createSetupFile_HELP.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext/npairs_createSetupFile_HELP.txt
+END
+pls_createSetupFile_HELP.txt
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext/pls_createSetupFile_HELP.txt
+END
+plsnpairs_createSessionProfile_HELP.txt
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/1758/trunk/plsnpairs/docs/commandLine_HELPtext/plsnpairs_createSessionProfile_HELP.txt
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/chrome/result/controller/observer/singlebrainimageview
+END
+RotationEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/singlebrainimageview/RotationEvent.java
+END
+SingleBrainImageViewObserver.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/singlebrainimageview/SingleBrainImageViewObserver.java
+END
+ZoomEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/singlebrainimageview/ZoomEvent.java
+END
+BrainViewEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/558/trunk/plsnpairs/pls/chrome/result/controller/observer/singlebrainimageview/BrainViewEvent.java
+END

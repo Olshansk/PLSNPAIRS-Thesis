@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/sessionprofile
+END
+PetSubjectGenerateDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/945/trunk/plsnpairs/pls/sessionprofile/PetSubjectGenerateDatamat.java
+END
+NiftiAnalyzeImage.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1613/trunk/plsnpairs/pls/sessionprofile/NiftiAnalyzeImage.java
+END
+PetRunInformation.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/945/trunk/plsnpairs/pls/sessionprofile/PetRunInformation.java
+END
+SessionProfile.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1727/trunk/plsnpairs/pls/sessionprofile/SessionProfile.java
+END
+PetDatamatSaver.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/945/trunk/plsnpairs/pls/sessionprofile/PetDatamatSaver.java
+END
+RunInformation.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/942/trunk/plsnpairs/pls/sessionprofile/RunInformation.java
+END
+RunGenerateDatamat.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/1648/trunk/plsnpairs/pls/sessionprofile/RunGenerateDatamat.java
+END
+DatamatSaver.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/945/trunk/plsnpairs/pls/sessionprofile/DatamatSaver.java
+END
+PetSubjectInformation.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/945/trunk/plsnpairs/pls/sessionprofile/PetSubjectInformation.java
+END

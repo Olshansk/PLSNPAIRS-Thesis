@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti
+END
+NiftiHeader.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/NiftiHeader.java
+END
+QuaternCoors.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/QuaternCoors.java
+END
+Nifti_Writer.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/Nifti_Writer.java
+END
+Nifti_Reader.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/Nifti_Reader.java
+END
+CoordinateMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/CoordinateMapper.java
+END
+AffineCoors.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/2/trunk/plsnpairs/extern/nifti/AffineCoors.java
+END

@@ -1,0 +1,56 @@
+PLS Session File (Blocked fMRI):
+
+>> psfj.session_info
+
+ans =
+
+            description: 'plsj_y2r4_ras'
+          pls_data_path: 'C:\anita\workspace\PLSwithNPAIRS\localTestData\fMRIData\reg_align_sm'
+         datamat_prefix: 'plsj_y2r4_ras_datamat_pref'
+        num_conditions0: 3
+             condition0: {'On'  'Off'  'Transition'}
+    condition_baseline0: {[0 1]  [0 1]  [0 1]}
+         num_conditions: 3
+              condition: {'On'  'Off'  'Transition'}
+     condition_baseline: {[0 1]  [0 1]  [0 1]}
+               num_runs: 1
+                    run: [1x1 struct]
+             across_run: 1
+                   mask: 'C:\anita\workspace\PLSwithNPAIRS\localTestData\fMRIData\masks\young_02_mean_align_mask.img'
+
+
+NPAIRS Session File:
+
+>> nsfj.session_info
+
+ans =
+
+           description: 'y2r4_reg_align_sm'
+        num_conditions: 3
+             condition: {'Off'  'On'  'Transition'}
+    condition_baseline: {[0 1]  [0 1]  [0 1]}
+              num_runs: 1
+                   run: [1x1 struct]
+                  mask: 'C:\anita\workspace\PLSwithNPAIRS\localTestData\fMRIData\masks\young_02_mean_align_mask.img'
+         scans_skipped: 5
+          runs_skipped: '0'
+
+-----------------------------------------------
+
+Variables required for PLS missing in NPAIRS session file:
+
+pls_data_path
+datamat_prefix
+num_conditions0
+condition0
+condition_baseline0
+across_run
+
+Variables required for NPAIRS missing in PLS session file:
+
+scans_skipped
+runs_skipped
+
+----------------------------------------------
+
+

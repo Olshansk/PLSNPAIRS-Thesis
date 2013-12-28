@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#15/09/2009 - ao - added ability for user to specify how much memory to allocate
+. plsnpairs_checkForJava
+#06/10/2009 - ao - added -Xms flag to java command line call
+nargs=$#
+
+checkForJava
+
+if [ $? -eq 0 ]; then
+    if [ $nargs -gt 0  ]; then
+		javaMem=$@
+    fi
+    echo "Allocating $javaMem memory to JVM..."
+    java -jar -Xms$javaMem -Xmx$javaMem $PLSNPAIRS_JARPATH
+fi
+

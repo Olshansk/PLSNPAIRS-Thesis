@@ -1,0 +1,275 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/1799/trunk/plsnpairs/pls/shared
+END
+fMRIDatamatFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/403/trunk/plsnpairs/pls/shared/fMRIDatamatFileFilter.java
+END
+BfMRIDatamatFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/403/trunk/plsnpairs/pls/shared/BfMRIDatamatFileFilter.java
+END
+NpairsAllCanonicalVariatesFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAllCanonicalVariatesFileFilter.java
+END
+AnalyzeNiftiFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/shared/AnalyzeNiftiFileFilter.java
+END
+NpairsAllChiSquaredFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAllChiSquaredFileFilter.java
+END
+PredictionPlotFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1318/trunk/plsnpairs/pls/shared/PredictionPlotFilter.java
+END
+StreamedProgressDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1429/trunk/plsnpairs/pls/shared/StreamedProgressDialog.java
+END
+PetContrastFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/PetContrastFileFilter.java
+END
+NpairsAllCVAEigenvaluesFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAllCVAEigenvaluesFileFilter.java
+END
+NpairsMaskFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsMaskFileFilter.java
+END
+NpairsfMRIResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/402/trunk/plsnpairs/pls/shared/NpairsfMRIResultFileFilter.java
+END
+NpairsBlockSessionFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/shared/NpairsBlockSessionFileFilter.java
+END
+GlobalVariablesFunctions.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/1799/trunk/plsnpairs/pls/shared/GlobalVariablesFunctions.java
+END
+NpairsAverageZScoreFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAverageZScoreFilter.java
+END
+ResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/766/trunk/plsnpairs/pls/shared/ResultFileFilter.java
+END
+NpairsAnalysisSetupFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/shared/NpairsAnalysisSetupFileFilter.java
+END
+NpairsAveragedCVAEigenimagesFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAveragedCVAEigenimagesFileFilter.java
+END
+TextFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1653/trunk/plsnpairs/pls/shared/TextFileFilter.java
+END
+NpairsReproducibilityFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsReproducibilityFileFilter.java
+END
+NpairsERSessionFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/819/trunk/plsnpairs/pls/shared/NpairsERSessionFileFilter.java
+END
+OnsetFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/271/trunk/plsnpairs/pls/shared/OnsetFileFilter.java
+END
+NpairsEVDFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1744/trunk/plsnpairs/pls/shared/NpairsEVDFileFilter.java
+END
+fMRIResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/402/trunk/plsnpairs/pls/shared/fMRIResultFileFilter.java
+END
+PetSessionFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/PetSessionFileFilter.java
+END
+PLSResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1653/trunk/plsnpairs/pls/shared/PLSResultFileFilter.java
+END
+BfMRIResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/402/trunk/plsnpairs/pls/shared/BfMRIResultFileFilter.java
+END
+fMRISessionFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/834/trunk/plsnpairs/pls/shared/fMRISessionFileFilter.java
+END
+MLFuncs.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/1774/trunk/plsnpairs/pls/shared/MLFuncs.java
+END
+BfMRISessionFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/403/trunk/plsnpairs/pls/shared/BfMRISessionFileFilter.java
+END
+fMRIVoxelDataFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/363/trunk/plsnpairs/pls/shared/fMRIVoxelDataFileFilter.java
+END
+AnalyzeImageFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1347/trunk/plsnpairs/pls/shared/AnalyzeImageFileFilter.java
+END
+BfMRIVoxelDataFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/363/trunk/plsnpairs/pls/shared/BfMRIVoxelDataFileFilter.java
+END
+NpairsSplitsInfoFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsSplitsInfoFileFilter.java
+END
+NpairsAnalysisSetupERFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/1763/trunk/plsnpairs/pls/shared/NpairsAnalysisSetupERFileFilter.java
+END
+NiftiFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/shared/NiftiFileFilter.java
+END
+fMRIContrastFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/fMRIContrastFileFilter.java
+END
+NiftiImageFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1347/trunk/plsnpairs/pls/shared/NiftiImageFileFilter.java
+END
+NpairsAllCVAEigenimagesFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/NpairsAllCVAEigenimagesFileFilter.java
+END
+NpairsClassFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/357/trunk/plsnpairs/pls/shared/NpairsClassFileFilter.java
+END
+PlsAnalysisSetupFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/683/trunk/plsnpairs/pls/shared/PlsAnalysisSetupFileFilter.java
+END
+StreamedProgressHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/1726/trunk/plsnpairs/pls/shared/StreamedProgressHelper.java
+END
+PetDatamatFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/plsnpairs/pls/shared/PetDatamatFileFilter.java
+END
+VoxelLocationFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/352/trunk/plsnpairs/pls/shared/VoxelLocationFileFilter.java
+END
+PValue.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/1611/trunk/plsnpairs/pls/shared/PValue.java
+END
+PetResultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/402/trunk/plsnpairs/pls/shared/PetResultFileFilter.java
+END

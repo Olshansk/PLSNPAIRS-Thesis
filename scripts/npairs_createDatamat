@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# 10/09/2009 - ao - wrapped datamat creation for NPAIRS
+# 01/10/2009 - ao - added ability for user to specify how much memory to allocate
+# 06/10/2009 - ao - now script works properly when user specifies memory and help 
+#                   message includes memory allocation info
+
+. plsnpairs_checkForJava
+
+checkForJava
+if [ $? -eq 0 ]; then
+    if [ $# -gt 0 ]; then
+        args=$@
+        arg1=$1
+        len_arg1=${#arg1}
+     
+	if [[ $arg1 =~ "-[0-9]+[m|M]\b" ]]; then
+	    javaMem=${arg1:1} # first arg gives memory allocation size
+            args=${args:$len_arg1} # strip first arg from NPAIRS args 
+        fi
+        echo "Allocating $javaMem memory to JVM..."
+    else
+        echo "* To specify amount of memory to allocate when running npairs_createDatamat, "
+        echo "include '-xxxxM' as first argument, where xxxx = amount of memory in MB. [OPTIONAL] *"
+    fi
+    java -Xms$javaMem -Xmx$javaMem -jar $PLSNPAIRS_JARPATH NPAIRS DATAMAT $args
+fi
+
+# NOTE: now first argument can be of form -xxxxM where xxxx is no. of MB memory to 
+# allocate to plsnpairs application

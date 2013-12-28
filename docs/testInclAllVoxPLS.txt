@@ -1,0 +1,56 @@
+Nov 26: retested PLS incl all voxels SF option against Matlab 
+after fixing windowField issue: OK
+
+In Matlab, compared Java and ML-generated datamats:
+
+>> dj = load('TESTo2r4_inclAllVox_reg_align_sm_BfMRIdatamat.mat')
+
+dj = 
+
+    normalize_volume_mean: 0
+                behavdata: []
+                behavname: {}
+            SingleSubject: 0
+      create_datamat_info: [1x1 struct]
+               st_datamat: [2x241917 double]
+              st_evt_list: [1 2]
+                  st_dims: [64 70 1 54]
+            st_voxel_size: [3.1250 3.1250 3.1250]
+                st_origin: [1 1 1]
+                st_coords: [1x241917 double]
+              st_win_size: 1
+           st_sessionFile: '/home/anita/plsnpairs/grady/sess/TESTo2r4_inclAllVox_reg_align_sm_BfMRIsession.mat'
+               create_ver: '999999'
+
+
+
+>> dm = load('TESTo2r4_inclAllVox_reg_align_sm_ML_BfMRIdatamat.mat')
+
+dm = 
+
+    normalize_volume_mean: 0
+                behavdata: []
+                behavname: {}
+            SingleSubject: 0
+      create_datamat_info: [1x1 struct]
+               st_datamat: [2x241917 single]
+              st_evt_list: [1 2]
+                  st_dims: [64 70 1 54]
+            st_voxel_size: [3.1250 3.1250 3.1250]
+                st_origin: [0 0 0]
+                st_coords: [1x241917 double]
+              st_win_size: 1
+           st_sessionFile: '/rri_disks/astraea/strother_lab/anita/plsnpairs_testdata/TESTo2r4_inclAllVox_reg_align_sm_ML_BfMRIsession.mat'
+               create_ver: '5.1007191'
+          singleprecision: 1
+             unequal_subj: 0
+            num_subj_cond: [1 1]
+
+>> f = find(dm.st_coords - dj.st_coords);
+>> f
+
+f =
+
+   Empty matrix: 1-by-0
+   
+--------------------------------

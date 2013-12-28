@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu May 21 11:04:26 EDT 2009
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=plsnpairs.jar
+manifest.mergeall=true
+manifest.mainclass=pls.Main
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|plsnpairs>~localTestData/;<po|plsnpairs>~.svn/;<po|plsnpairs>~images/~.svn/;<po|plsnpairs>~images/~.xvpics/;<po|plsnpairs>~images/~wiki/~.svn/;<po|plsnpairs>~npairs/~io/~.svn/;<po|plsnpairs>~npairs/~.svn/;<po|plsnpairs>~npairs/~shared/~.svn/;<po|plsnpairs>~npairs/~shared/~matlib/~.svn/;<po|plsnpairs>~npairs/~shared/~nifti/~.svn/;<po|plsnpairs>~npairs/~utils/~.svn/;<po|plsnpairs>~pls/~sessionprofile/~.svn/;<po|plsnpairs>~pls/~.svn/;<po|plsnpairs>~pls/~shared/~.svn/;<po|plsnpairs>~pls/~analysis/~.svn/;<po|plsnpairs>~pls/~chrome/~sessionprofile/~.svn/;<po|plsnpairs>~pls/~chrome/~.svn/;<po|plsnpairs>~pls/~chrome/~shared/~.svn/;<po|plsnpairs>~pls/~chrome/~analysis/~.svn/;<po|plsnpairs>~pls/~test/~.svn/;<po|plsnpairs>~extern/~jMatLink/~.svn/;<po|plsnpairs>~extern/~jMatLink/~doc/~.svn/;<po|plsnpairs>~extern/~jMatLink/~doc/~javadoc/~.svn/;<po|plsnpairs>~extern/~jMatLink/~doc/~javadoc/~jmatlink/~.svn/;<po|plsnpairs>~extern/~jMatLink/~doc/~javadoc/~resources/~.svn/;<po|plsnpairs>~extern/~jMatLink/~doc/~javadoc/~index-files/~.svn/;<po|plsnpairs>~extern/~jMatLink/~jmatlink/~ui/~.svn/;<po|plsnpairs>~extern/~jMatLink/~jmatlink/~.svn/;<po|plsnpairs>~extern/~jMatLink/~jmatlink/~testsuite/~.svn/;<po|plsnpairs>~extern/~.svn/;<po|plsnpairs>~extern/~nifti/~.svn/;<po|plsnpairs>~extern/~nifti/~alignstacks/~.svn/;<po|plsnpairs>~extern/~nifti/~alignstacks/~align3tp/~.svn/;<po|plsnpairs>~docs/;<po|plsnpairs>~.project;<po|plsnpairs>~.classpath;<po|plsnpairs>~.fatjar;<cl|/home/jacques/workspace/plsnpairs/extern/jMatLink>~.svn/;<cl|/home/jacques/workspace/plsnpairs/extern/jMatLink>~doc/~.svn/;<cl|/home/jacques/workspace/plsnpairs/extern/jMatLink>~jmatlink/~.svn/
+includes=

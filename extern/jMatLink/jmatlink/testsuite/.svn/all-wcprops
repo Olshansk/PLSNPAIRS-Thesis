@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/245/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite
+END
+Benchmark01.class
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/5/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite/Benchmark01.class
+END
+AllTests.class
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/5/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite/AllTests.class
+END
+CoreJMatLink.class
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/245/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite/CoreJMatLink.class
+END
+StressTest01.class
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/5/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite/StressTest01.class
+END
+EnduranceTest01.class
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/5/trunk/plsnpairs/extern/jMatLink/jmatlink/testsuite/EnduranceTest01.class
+END

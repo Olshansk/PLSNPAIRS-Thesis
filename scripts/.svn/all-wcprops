@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/918/trunk/plsnpairs/scripts
+END
+npairs_setupAnalysis
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/778/trunk/plsnpairs/scripts/npairs_setupAnalysis
+END
+plsnpairs_checkForJava
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/915/trunk/plsnpairs/scripts/plsnpairs_checkForJava
+END
+npairs_rvpTool
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/683/trunk/plsnpairs/scripts/npairs_rvpTool
+END
+pls_setupAnalysis
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/778/trunk/plsnpairs/scripts/pls_setupAnalysis
+END
+npairs_createSessionProfile
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/778/trunk/plsnpairs/scripts/npairs_createSessionProfile
+END
+npairs_runAnalysis
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/918/trunk/plsnpairs/scripts/npairs_runAnalysis
+END
+pls_createSessionProfile
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/778/trunk/plsnpairs/scripts/pls_createSessionProfile
+END
+pls_runAnalysis
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/918/trunk/plsnpairs/scripts/pls_runAnalysis
+END
+plsnpairs
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/918/trunk/plsnpairs/scripts/plsnpairs
+END
+npairs_createDatamat
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/918/trunk/plsnpairs/scripts/npairs_createDatamat
+END
+pls_createDatamat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/918/trunk/plsnpairs/scripts/pls_createDatamat
+END

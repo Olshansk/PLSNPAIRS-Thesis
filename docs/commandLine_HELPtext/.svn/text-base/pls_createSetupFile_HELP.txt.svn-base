@@ -1,0 +1,14 @@
+PLS Create Analysis Setup Usage:
+-PLSTYPE type -- The analysis type ("MEAN_CENTERING_PLS", "BEHAVIOR_PLS", "NON-ROTATED_TASK_PLS", "NON-ROTATED_BEHAVIOR_PLS")
+-SETUP_FILE_PREFIX filename -- Prefix for the PLSAnalysisSetup file that will be created (automatically
+appended with '_PLSAnalysisSetup.mat').
+-SESSION_FILES grp1file1,grp1file2,grp1file3 grp2file1,grp2file2,grp2file3 -- The list of session files. Separate files in each group by 
+commas and groups by spaces.
+-RESULTS_FILE_PREFIX filename -- Prefix for the results file.
+-CONDITION_SELECTION n1 n2 n3 -- (default: include all conditions) Enter string of 1s and 0s separated by 
+whitespace to indicate whether to include each condition - e.g. 1 0 1 1 to include 1st, 3rd and 4th condition
+but not 2nd. Condition order is taken from session files.
+-NUM_PERMUTATIONS n -- The number of permutations to run (default 0).
+-NUM_BOOTSTRAPS n -- The number of bootstrap samples to run (default 0).
+-CONFIDENCE_LEVEL int -- The confidence level for this analysis (default 95).
+(0 < confid. level <= 100)

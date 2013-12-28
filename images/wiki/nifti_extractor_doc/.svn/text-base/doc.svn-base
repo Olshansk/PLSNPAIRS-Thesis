@@ -1,0 +1,43 @@
+#summary 8.3 Nifti Extractor tool
+
+From the other tools drop down menu select 'Nifti image extractor'
+With this program you can extract eigen images from saved NPAIRS or PLS result files.
+
+= Extracting images from NPAIRS result files =
+By default a view for extracting images from NPAIRS result files is presented when 
+you open the extractor for the first time.
+
+You can either fill out the fields manually or you can load a formatted text file that 
+contains the entries for the fields. 
+
+If you decided to fill out the fields manually there is the 'Select set' convenience button
+that allows you to load a PC set by selecting a single member of a set.
+
+Here is an example of the formatting a text file must have before it can be loaded:
+/home/fletcher/workspace/data2/ATOL2/jul30_2010_y246_5cond$pc_NPAIRSJresult.mat,zs,CV2,2,6,10
+
+The values are separated by commas. The first value is the path to the set of files you 
+want to extract images from. This set must be a pc set and the pc number must be replaced
+with the wildcard character '$'. The second value is the data type, where valid datatypes 
+are zs for zscore,ac for average canonical, and fr for full-data reference. The third value
+is where the CV value is specified and the values specified after the CV is where the pc 
+files to load are specified. 
+
+Generalized, the formatting is specified in the following way:
+path to set with wilcard,datatype,CV#,pc1,pc2,pc3...
+
+Once the fields are filled out you can either extract the images by either 
+going to the file menu, hitting ctrl+e, or pressing the extract button. A dialog will pop up 
+showing you the filename that the images will be saved under and from there you can select a
+directory to save the files into. That is all there is to it!
+
+= Extracting images from PLS result files =
+You can only extract images from PLS result files one at a time. To do so, switch to the PLS
+extraction view by clicking "PLS Extractor" and press the 'select file' button. Choose a file
+and fill in the appropriate fields and then hit the extract button. A dialog will appear with
+the filename that the extracted images will be saved under and from there a directory should
+be chosen by you to save the images into.    
+
+
+
+

@@ -1,0 +1,78 @@
+Output array 'post':
+
+post dims =  (2 * no. splits) X (no. test vols) X (2) X (no. cva classes + 4)
+
+post(i,j,p,0)   = posterior probability for true group
+post(i,j,p,1)   = squared prediction error
+post(i,j,p,2)   = predicted group based on maximum posterior probability
+post(i,j,p,3)   = correct classification (0 = wrong, 1 = right)
+post(i,j,p,3+g) = posterior probability of belonging to gth cva class 
+
+where:
+i = (i+1)th CVA analysis (i=0,1 -> 1st split, i=2,3 -> 2nd split, etc)
+j = (j+1)th test volume
+p = 0, 1 (0 -> priors used, 1 -> priors not used)
+
+--------------------------------1.
+
+NPAIRS IDL code for prediction stats found in: npairs_cva_general.pro
+
+Step 1: calculate 'priors'
+
+ - prior for each class = proportion of total scans belonging to given class
+ 
+REQUIRED:
+(a) array of class labels (one for each input data vol)
+ == Npairsj.setupParams.cvaClassLabels     
+
+Step 2: read in (summary?) training CV scores and calculate 'dimTr'
+== Npairsj.avgCVScoresTrain
+Step 3: read in (summary?) test CV scores and calculate 'dimTe'
+== Npairsj.avgCVScoresTest
+
+Step 4: make sure dimTr == dimTe
+
+Step 5: for each split half analysis, do:
+
+	- get training and test CV scores
+	- update max number of test vols across all split analyses
+	- make sure all CV dims have cv score data for train and test
+	- make sure train and test contain same classes
+	- compute group means for train CV scores
+		(see 'cva_grp_means.pro')	
+	- for each CV dim, do:
+		- compute between and within class variance of predicted CV scores
+		- compute % misclassification based on closeness to train class means
+	- compute inverse of between-class covariance matrix
+	- for each test volume, do:
+		- compute probability kth vol belongs to jth class
+		- compute some other probability stuff (using priors)
+		- compute some other probability stuff (no priors)
+		
+Step 6: save between and within stuff
+
+Step 7: save posterior probs (i.e., prediction stats)
+--------------------------------------------------------------
+
+Outline of Java prediction stats structure:
+
+ - 'npairs_result.prediction' contains 2 structs:
+
+		'priors' and 'no_priors'
+
+- each of these 2 structs contains the following variables:
+
+	pp_true_class   = 2D array  [(2 * no. splits) X (no. test vols)] 
+	sqrd_pred_error = 2D array  [     "           X       "        ]
+	pred_class  = 2D array  [     "           X       "        ] 
+	pp_all_classes  = struct with 'no. classes' elements
+	                  - each element in struct is 2D array  [(2 * no. splits) X (no. test vols)]
+	
+	 
+
+
+
+		
+
+
+ 

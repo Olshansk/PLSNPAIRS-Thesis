@@ -1,0 +1,12 @@
+K 13
+svn:mergeinfo
+V 308
+/branch/charisa/lib/colt.jar:1062-1326,1588-1612
+/branch/danLewisV1192Modified/lib/colt.jar:1193-1216
+/branch/fletcher/lib/colt.jar:1247-1284,1326-1334,1345-1423,1444-1449,1456-1474,1477-1572,1577-1610,1615-1621,1624-1633,1635-1649,1656,1661-1669,1681-1692,1708,1722-1725
+/trunk/plsnpairs/lib/colt.jar:3-1061
+K 13
+svn:mime-type
+V 24
+application/octet-stream
+END

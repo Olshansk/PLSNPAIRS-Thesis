@@ -1,0 +1,18 @@
+Mar 16 2010:
+
+About initial eigenvalue decomposition in IDL NPAIRS:
+
+- see npairs_run.pro, npairs_svd.pro and ssm_cov_mat.pro
+
+(i) npairs_run calls npairs_svd to do initial decomp. and create data matrix
+(in new space) that gets passed on to later npairs steps.
+(ii) Data is not mean-centred before passing into npairs_svd.  
+(iii) npairs_svd calls ssm_cov_mat to create 'covariance matrix', 
+
+***** BUT NOTE ssm_cov_mat just creates a 'sums of squares and products' (SSP)
+matrix (i.e. doesn't mean-centre data M before calculating MMt)!!!*****
+
+(iv) Then npairs_svd calls eigenql to calculate eigenvectors and eigenvalues
+of the SSP matrix from (iii).
+
+NpairsDataLoader.selectFeaturesEVD currently uses same method as above.

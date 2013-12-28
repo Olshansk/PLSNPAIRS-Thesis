@@ -1,0 +1,7 @@
+#!/bin/bash
+. plsnpairs_checkForJava
+
+checkForJava
+if [ $? -eq 0 ]; then
+	java -jar $PLSNPAIRS_JARPATH NPAIRS SETUP_ANALYSIS $@
+fi

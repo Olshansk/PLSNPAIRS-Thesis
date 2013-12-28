@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<project default = "main" basedir = ".">
+	<property name = "jarname" value = "fat.jar"/>
+	<property name = "keystore" value = "${user.home}/plsnpairsStore"/>
+	<property name = "passphrase" value = "npairs"/>
+	<property name = "username" value = "sslab"/>
+	<property name = "keypass" value = "rootman"/>
+	<property name = "jarsigner_path" value = "/usr/java/jdk1.6.0_14/bin/"/>
+	
+	<target name="main" >
+ 		<fatjar.build output="${jarname}">
+ 			<!-- The main class for this jar file -->
+ 			<fatjar.manifest mainclass = "pls.Main"/>
+ 			<!-- The folders which we need to include in our jar file -->
+ 			<fatjar.filesource path = "pls" relpath = "pls">
+ 				<!-- exclude the .svn folders -->
+ 				<fatjar.exclude relpath = "pls/.svn"/>
+ 				<fatjar.exclude relpath = "pls/analysis/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/analysis/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/blvplot/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/clusterreport/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/command/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/brainimageproperties.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/colourscale/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/datachange/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/filters/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/selection/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/controller/observer/singlebrainimageview/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/model/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/view/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/result/view/scatterplot/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/sessionprofile/.svn"/>
+ 				<fatjar.exclude relpath = "pls/chrome/shared/.svn"/>
+ 				<fatjar.exclude relpath = "pls/othertools/.svn"/>
+ 				<fatjar.exclude relpath = "pls/othertools/niftiextractor/.svn"/>
+ 				<fatjar.exclude relpath = "pls/othertools/rvptool/.svn"/>
+ 				<fatjar.exclude relpath = "pls/sessionprofile/.svn"/>
+ 				<fatjar.exclude relpath = "pls/shared/.svn"/>
+ 				<fatjar.exclude relpath = "pls/test"/>
+			</fatjar.filesource>
+ 			<fatjar.filesource path = "npairs" relpath = "npairs">
+ 				<!-- exclude the .svn folders -->
+ 				<fatjar.exclude relpath = "npairs/.svn"/>
+ 				<fatjar.exclude relpath = "npairs/io/.svn"/>
+ 				<fatjar.exclude relpath = "npairs/shared/.svn"/>
+ 				<fatjar.exclude relpath = "npairs/shared/matlib/.svn"/>
+ 				<fatjar.exclude relpath = "npairs/utils/.svn"/>
+ 			</fatjar.filesource>
+ 			<fatjar.filesource path = "extern" relpath = "extern">
+ 				<!-- exclude the .svn folders -->
+ 				<fatjar.exclude relpath = "extern/.svn"/>
+ 				<fatjar.exclude relpath = "extern/jMatLink/.svn"/>
+ 				<fatjar.exclude relpath = "extern/jMatLink/jmatlink/.svn"/>
+ 				<fatjar.exclude relpath = "extern/jMatLink/jmatlink/ui/.svn"/>
+ 				<fatjar.exclude relpath = "extern/nifti/.svn"/>
+ 				<fatjar.exclude relpath = "extern/nifti/alignstacks/.svn"/>
+ 				<fatjar.exclude relpath = "extern/nifti/alignstacks/align3tp/.svn"/>
+ 				<fatjar.exclude relpath = "extern/niftijlib/.svn"/>		
+ 				<!-- avoid including documentation or test folders -->
+ 				<fatjar.exclude relpath = "extern/jMatLink/doc"/>
+ 				<fatjar.exclude relpath = "extern/jMatLink/jmatlink/testsuite"/>
+ 			</fatjar.filesource>
+ 			<fatjar.filesource path = "images" relpath = "images">
+ 				<!-- exclude the wiki images -->
+ 				<fatjar.exclude relpath = "images/wiki"/>
+ 				<!-- exclude the .svn folders -->
+ 				<fatjar.exclude relpath = "images/.svn"/>
+ 			</fatjar.filesource>
+ 			<!-- External JAR files that we reference in our project --> 
+ 			<fatjar.jarsource file = "lib/arpack-combo-0.1.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/blas.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/colt.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/commons-math-1.1.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/concurrent.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/core-lapack.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/f2jutil.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/ij.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/j3dcore.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/Jama-1.0.2.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/jcommon-1.0.16.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/jfreechart-1.0.13.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/jlfgr-1_0.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/jmatio.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/junit-4.4.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/lapack.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/log4j-1.2.13.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/MindSeer.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/netlib-java-0.9.1.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/parallelcolt-0.9.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/swingx_v0201.jar" relpath = ""/>
+			<fatjar.jarsource file = "lib/vecmath.jar" relpath = ""/>
+ 			<fatjar.jarsource file = "lib/xerbla.jar" relpath = ""/>
+    	</fatjar.build>
+		<echo message = "Executing... jarsigner -keystore ${keystore} -storepass ${passphrase} -keypass ${keypass} ${jarname} ${username}"/>
+		<exec executable = "${jarsigner_path}/jarsigner">
+			<arg line = "-keystore ${keystore} -storepass ${passphrase} -keypass ${keypass} ${jarname} ${username}"/>
+		</exec>
+	</target>
+</project>

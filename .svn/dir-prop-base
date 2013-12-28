@@ -1,0 +1,32 @@
+K 10
+svn:ignore
+V 364
+y246_pcRange_Mar25.npairsRunInfo.txt
+data
+20subj_3cls_10wind_ER.NPAIRSrunInfo.txt
+plsnpairs output log, for date of 2009-11-26.txt
+20subj_3cls_10wind_ER.npairsRunInfo.txt
+cern
+localTestData
+spreng_PLSvsNPAIRS
+laptopData
+y246_pcRange.npairsRunInfo.txt
+y246_pcRange.NPAIRSrunInfo.txt
+grigori
+RRSD_tests
+snodgrass_Robyn_tests
+docs_testNotes
+corejava
+hep
+spreng_tests
+
+K 13
+svn:mergeinfo
+V 311
+/branch/charisa:1062-1326,1588-1612
+/branch/danLewisV1192Modified:1193-1216
+/branch/danlewis:1067-1192
+/branch/fletcher:1247-1317,1326-1334,1345-1423,1444-1449,1456-1474,1477-1572,1577-1610,1615-1621,1624-1633,1635-1649,1656,1661-1669,1681-1692,1708,1722-1725
+/branch/grigori:1046-1720
+/trunk/plsnpairs:949-1045
+END

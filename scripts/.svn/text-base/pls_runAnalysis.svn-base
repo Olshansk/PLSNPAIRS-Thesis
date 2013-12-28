@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# 01/10/2009 - ao - added ability for user to specify how much memory to allocate
+# 06/10/2009 - ao - now args are fed in correctly to java command line when memory is given 
+#                   explicitly; also, help message (when no args are supplied) includes memory 
+#                   allocation info now
+
+. plsnpairs_checkForJava
+
+checkForJava
+if [ $? -eq 0 ]; then
+    if [ $# -gt 0 ]; then
+        args=$@
+        arg1=$1
+	first_char=${arg1:0:1}
+        len_arg1=${#arg1}
+     
+        if [ "$first_char" == "-" ]; then
+	         javaMem=${arg1:1} # first arg gives memory allocation size
+                 args=${args:$len_arg1} # strip first arg from PLS args 
+	
+        fi
+        echo "Allocating $javaMem memory to JVM..."
+    else 
+	echo "* To specify amount of memory to allocate for pls_runAnalysis, "
+        echo "include '-xxxxM' as first argument, where xxxx = amount of memory in MB. [OPTIONAL] *"
+    fi
+    java -Xms$javaMem -Xmx$javaMem -jar $PLSNPAIRS_JARPATH PLS RUN_ANALYSIS $args
+fi
+
+# NOTE: now first argument can be of form -xxxxM where xxxx is no. of MB memory to 
+# allocate to plsnpairs application
