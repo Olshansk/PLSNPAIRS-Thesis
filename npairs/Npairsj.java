@@ -667,7 +667,12 @@ public class Npairsj  {
 				}
 			}
 			
-			BufferedWriter out = new BufferedWriter(new FileWriter("Hadoop_input_files/" + Integer.toString(i)));
+			final File file = new File("Hadoop_input_files/" + Integer.toString(i));
+			final File parent_directory = file.getParentFile();
+			if (null != parent_directory) {
+			    parent_directory.mkdirs();
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));			
 		    out.write(outString);
 		    out.close();
 		    
