@@ -10,6 +10,7 @@ import npairs.io.NpairsDataLoader;
 import npairs.io.NpairsjIO;
 import npairs.NpairsjSetupParams;
 import npairs.NpairsjException;
+import npairs.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +34,6 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 	String matlibType;
 	String matlibTypeForInitFeatSel;
 	//Alan
-	String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	
 	int numNPAIRS = 1;
 	
@@ -306,7 +306,7 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 						}
 						 FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
 						    Path local = new Path("dataLoader.ser");
-						    Path hdfs = new Path(hadoopDirectory); 
+						    Path hdfs = new Path(Test.hadoopDirectory); 
 						    hdfsFileSystem.copyFromLocalFile(true, local, hdfs);
 					}
 					Npairsj npairsj = new Npairsj(ndl, nsp, matlibType);
