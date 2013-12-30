@@ -515,21 +515,36 @@ public class Npairsj  {
 				throw new Exception("Hadoop environment variables not found.");
 			}
 
-			String hdfs_loc = "";
+			
 			Process process = Runtime.getRuntime().exec("hadoop version");
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String hadoop_version = stdInput.readLine().split(" ")[1];
 
+			String hdfs_loc = "";
+			String slaves_loc = "";
 			if (hadoop_version.charAt(0) == '2') {
 				hdfs_loc = hadoop_loc + "/etc/hadoop/hdfs-site.xml";
+				 slaves_loc = hadoop_loc + "/etc/hadoop/slaves";
 			} else {
 				hdfs_loc = hadoop_loc + "/conf/hdfs-site.xml";
+				slaves_loc = hadoop_loc + "/conf/slaves";
 			}
 
-			if (hdfs_loc.length() == 0) {
+			if (hdfs_loc.length() == 0 || slaves_loc.length() == 0) {
 				throw new Exception("Hadoop version cannot be identified.");
 			}
 
+			int slaves = 0;
+			int hdfs = -1;
+			
+			BufferedReader reader = new BufferedReader(new FileReader (slaves_loc));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.length() != 0) {
+					slaves++;
+				}
+			}			
+			
 			File fXmlFile = new File(hdfs_loc);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -541,11 +556,19 @@ public class Npairsj  {
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					if (eElement.getElementsByTagName("name").item(0).getTextContent().equals("dfs.replication")) {
-						return Integer.parseInt(eElement.getElementsByTagName("value").item(0).getTextContent());
+						hdfs =  Integer.parseInt(eElement.getElementsByTagName("value").item(0).getTextContent());
 					}
 				}
 			}
-			throw new Exception("dfs.replication is not specified in hdfs-site.xml.");
+			if (hdfs == -1) {
+				throw new Exception("dfs.replication is not specified in hdfs-site.xml.");
+			}
+			
+			if (slaves == hdfs) {
+				return slaves;
+			} else {
+				throw new Exception("dfs.replication is not specified in hdfs-site.xml.");
+			}
 		 }
 		 catch (Exception e) {
 			 e.printStackTrace();

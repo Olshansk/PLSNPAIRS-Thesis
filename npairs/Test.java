@@ -45,18 +45,14 @@ public class Test {
 
 	public static String shortenPath (Text value) {
 		String longPath = value.toString().trim();
-		System.out.println("OLSHANSKY longPath: " + longPath);
 		String [] allNums = longPath.split("_");
 		String shortPath = allNums[0] + "_to_" +allNums[allNums.length - 1];
-		System.out.println("OLSHANSKY longPath: " + shortPath);
 		return shortPath;
 	}
 	
 	public static String shortenPath (String longPath) {
-		System.out.println("OLSHANSKY longPath: " + longPath);
 		String [] allNums = longPath.split("_");
 		String shortPath = allNums[0] + "_to_" +allNums[allNums.length - 1];
-		System.out.println("OLSHANSKY longPath: " + shortPath);
 		return shortPath;
 	}
 	  
@@ -177,6 +173,37 @@ public class Test {
       
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {    	
+    	
+    	/* String [] files = {"dataLoader.ser", "setupParams.ser", "splits.ser", "fullDataAnalysis.ser"};
+    	NpairsDataLoader dataLoader = null;
+    	NpairsjSetupParams setupParams = null;
+    	int[][][] splits = null;
+    	Analysis fullDataAnalysis = null;
+    	
+    	for (int i = 0; i < files.length; i++) {
+    		String s = files[i];
+			System.out.println("Reconstructing the " + s + " object");
+    		FileSystem fs = FileSystem.get(context.getConfiguration());
+			Path path = new Path(s);
+			
+			InputStream in = fs.open(path);
+			ObjectInputStream objReader = new ObjectInputStream(in);
+			
+			try {
+				switch(i) {
+					case 0: dataLoader = (NpairsDataLoader)objReader.readObject();
+					case 1: setupParams = (NpairsjSetupParams)objReader.readObject();
+					case 2: splits = (int[][][])objReader.readObject();
+					case 3: fullDataAnalysis = (Analysis)objReader.readObject();
+				}
+				
+	  		} catch (ClassNotFoundException e) {
+	  			// TODO Auto-generated catch block
+	  			e.printStackTrace();
+	  		}
+	        in.close();
+    	}
+    	 */
     	
     	double sTime1 = System.currentTimeMillis();
     	
@@ -529,8 +556,6 @@ public class Test {
         double sTime = System.currentTimeMillis();	
 		/******************Serialize objects*********************/
 		FileSystem fs4 = FileSystem.get(context.getConfiguration());
-		System.out.println("OLSHANSKY1: null");
-		System.out.println("OLSHANSKY1: " + Test.shortenPath(value));
 		Path temp1 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgCVScoresTrain_" + Test.shortenPath(value));
 		ObjectOutputStream os1 = new ObjectOutputStream(fs4.create(temp1));
 		os1.writeObject(avgCVScoresTrain);
@@ -704,7 +729,18 @@ public class Test {
     
     //starting to move tmp serialized files to HDFS
     FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
-
+    
+    Path hadoopDir = new Path(hadoopDirectory);
+    if(hdfsFileSystem.exists(hadoopDir)){    	
+    	FileStatus fs = hdfsFileSystem.getFileStatus(hadoopDir);
+    	if (fs.isFile()) {
+    		hdfsFileSystem.delete(hadoopDir, true);
+    		hdfsFileSystem.mkdirs(hadoopDir);
+    	}
+    } else {
+    	hdfsFileSystem.mkdirs(hadoopDir);
+    }
+    
     Path out = new Path(hadoopDirectory + "out");
     if(hdfsFileSystem.exists(out)){
     	hdfsFileSystem.delete(out, true);
@@ -714,6 +750,12 @@ public class Test {
     if(hdfsFileSystem.exists(in)){
     	hdfsFileSystem.delete(in, true);
     }
+    
+    Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser");
+    if(hdfsFileSystem.exists(hdfs_out)){
+    	hdfsFileSystem.delete(hdfs_out, true);
+    }
+    hdfsFileSystem.mkdirs(hdfs_out);
     
     Path local1 = new Path("setupParams.ser");
     Path local2 = new Path("splits.ser");
@@ -737,7 +779,6 @@ public class Test {
     System.out.println("hadoop job takes: " + tTime + "seconds...");    
         
     //move files from HDFS to local FS
-    Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser"); 
     ///Path local6 = new Path("/home/alanlu/NPAIRS/");
     Path local6 = new Path(localDirectory);
     hdfsFileSystem.copyToLocalFile(true, hdfs_out, local6);
