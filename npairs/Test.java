@@ -730,17 +730,6 @@ public class Test {
     //starting to move tmp serialized files to HDFS
     FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
     
-    Path hadoopDir = new Path(hadoopDirectory);
-    if(hdfsFileSystem.exists(hadoopDir)){    	
-    	FileStatus fs = hdfsFileSystem.getFileStatus(hadoopDir);
-    	if (fs.isFile()) {
-    		hdfsFileSystem.delete(hadoopDir, true);
-    		hdfsFileSystem.mkdirs(hadoopDir);
-    	}
-    } else {
-    	hdfsFileSystem.mkdirs(hadoopDir);
-    }
-    
     Path out = new Path(hadoopDirectory + "out");
     if(hdfsFileSystem.exists(out)){
     	hdfsFileSystem.delete(out, true);

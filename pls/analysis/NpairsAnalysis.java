@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -304,10 +305,23 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 						{
 							ex.printStackTrace();
 						}
-						 FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
-						    Path local = new Path("dataLoader.ser");
-						    Path hdfs = new Path(Test.hadoopDirectory); 
-						    hdfsFileSystem.copyFromLocalFile(true, local, hdfs);
+						
+						FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
+						
+					    Path hdfs = new Path(Test.hadoopDirectory);
+					    if(hdfsFileSystem.exists(hdfs)){    	
+					    	FileStatus fs = hdfsFileSystem.getFileStatus(hdfs);
+					    	if (fs.isFile()) {
+					    		hdfsFileSystem.delete(hdfs, true);
+					    		hdfsFileSystem.mkdirs(hdfs);
+					    	}
+					    } else {
+					    	hdfsFileSystem.mkdirs(hdfs);
+					    }
+						
+					    Path local = new Path("dataLoader.ser");
+					    
+					    hdfsFileSystem.copyFromLocalFile(true, local, hdfs);
 					}
 					Npairsj npairsj = new Npairsj(ndl, nsp, matlibType);
 
