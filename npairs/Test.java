@@ -206,7 +206,7 @@ public class Test {
     	 */
     	
     	double sTime1 = System.currentTimeMillis();
-    	
+    	System.out.println("Reconstructing the dataloader object");
         /*****************Reconstructing the dataloader object**************/        
         FileSystem fs1 = FileSystem.get(context.getConfiguration());
         Path path = new Path("dataLoader.ser");
@@ -222,6 +222,7 @@ public class Test {
   			e.printStackTrace();
   		}
         in.close();  
+        System.out.println("Reconstructing the setupParams object");
         /******************Reconstructing the setupParams object**************/
         FileSystem fs2 = FileSystem.get(new Configuration());
         Path path2 = new Path("setupParams.ser");
@@ -236,6 +237,7 @@ public class Test {
   		e.printStackTrace();
         }
         in2.close();           
+        System.out.println("Reconstructing the splits object");
         /******************Reconstructing the splits object**************/
         FileSystem fs3 = FileSystem.get(new Configuration());
         Path path3 = new Path("splits.ser");
@@ -249,6 +251,7 @@ public class Test {
   		e.printStackTrace();
         }
         in3.close();                
+        System.out.println("Reconstructing the fullDataAnalysis object");
         /******************Reconstructing the fullDataAnalysis object**************/
         //FileSystem fs4 = FileSystem.get(new Configuration());
         Path path4 = new Path("fullDataAnalysis.ser");
@@ -296,9 +299,10 @@ public class Test {
 		if (setupParams.switchTrainAndTestSets) {
 			numAnalyses = numAnalyses * 2;
 		}
-		
+		System.out.println("Before loop for splitNums");
         for(String i:splitNums){
-            
+        	System.out.println("splitNums loop with index: " + i);
+        	double start = System.currentTimeMillis();
         	int splitNum = Integer.parseInt(i);
 
             Analysis firstPartAnalysis = null;
@@ -306,6 +310,8 @@ public class Test {
 
     		int[] split1DataVols = splits[0][splitNum];
     		int[] split2DataVols = splits[1][splitNum];
+    		
+    		start = System.currentTimeMillis();
     		
     		if (setupParams.initFeatSelect) {
     			firstPartAnalysis = 
@@ -327,7 +333,10 @@ public class Test {
     							split2DataVols, false, fullDataAnalysis);
     			}
     		}
-    		 
+    		
+    		double tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("firstPartAnalysis: " + tTime + " seconds");    
+    		
     		try {
     			firstPartAnalysis.run();
     		} catch (NpairsjException e) {
@@ -337,6 +346,8 @@ public class Test {
     		
     		++numAnalyses;
 
+    		start = System.currentTimeMillis();
+    		
     		if (setupParams.switchTrainAndTestSets) {
 
     			try {
@@ -347,6 +358,9 @@ public class Test {
     			}
     			++numAnalyses;
     		}
+    		
+    		tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("secondPartAnalysis: " + tTime + " seconds"); 
     		
     		//Added by Alan
     		PCA splitDataPCA1 = null;
@@ -361,10 +375,15 @@ public class Test {
     			}
     		}
     		
+    		start = System.currentTimeMillis();
+    		
     		splitDataCVA1 = firstPartAnalysis.getCVA();  // null if cva not run
     		splitDataCVA2 = secondPartAnalysis.getCVA(); // null if cva not run or training and 
     													 // test data not switched
 
+    		tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("Ran CVA on both parts: " + tTime + " seconds");
+    		
     		// Add r2 stats Matrix for current split half to r2 Matrix array.
 			if (true) {
 				addCurrR2(splitNum,setupParams,splitDataCVA1,splitDataCVA2);
@@ -375,6 +394,8 @@ public class Test {
 			Matrix split2CVSTrain = null;
 			Matrix split2CVSTest = null;
 
+    	    start = System.currentTimeMillis();
+			
 			if (setupParams.cvaRun) {
 				//  Incorporate current split into summary CV-Training and CV-Test Scores				
 				split1CVAEvals.setRow(splitNum, splitDataCVA1.getEvals());
@@ -436,6 +457,12 @@ public class Test {
 					avgCVScoresTest = avgCVScoresTest.plus(split1CVSTest);
 				}
 			}
+			
+			tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("if (setupParams.cvaRun): " + tTime + " seconds");
+
+    	    start = System.currentTimeMillis();
+    	    
 			if (setupParams.initFeatSelect) {
 				if (setupParams.cvaRun) {
 					splitDataCVA1.rotateEigimsToOrigSpace(dataLoader.getEVDProjFactorMat(), 
@@ -464,6 +491,9 @@ public class Test {
 				}
 			}
 
+			tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("if (setupParams.initFeatSelect): " + tTime + " seconds");
+			
 //			Save split results in ASCII format:
 			if (setupParams.saveSplitDataResults) {
 				if (setupParams.pcaRun) {
@@ -496,7 +526,11 @@ public class Test {
 				}
 			}
 
-    		
+			tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("if (setupParams.saveSplitDataResults): " + tTime + " seconds");
+			
+    	    start = System.currentTimeMillis();
+    	    
 			if (setupParams.switchTrainAndTestSets) {
 				
 				ZScorePatternInfo zScorePattInfo = new ZScorePatternInfo(splitDataCVA1.getEigimsBig(), 
@@ -540,6 +574,8 @@ public class Test {
 				
 			} // end if switch train/test 
 
+			tTime = (System.currentTimeMillis() - start) / 1000;
+    	    System.out.println("if (setupParams.switchTrainAndTestSets): " + tTime + " seconds");
 
 			count ++;
 			// Prediction metrics can be calculated whenever there is a test 
@@ -552,6 +588,7 @@ public class Test {
 				e.printStackTrace();
 			}
         }  
+        System.out.println("After loop for splitNums");
         
         double sTime = System.currentTimeMillis();	
 		/******************Serialize objects*********************/

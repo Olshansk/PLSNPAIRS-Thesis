@@ -83,7 +83,14 @@ public class Main {
 	
 	// note: run with VM arguments -Xms64m -Xmx512m
 	public static void main(String[] argv) throws Exception {
+		
+		File file = new File("npairs_output.txt");  
+		FileOutputStream fis = new FileOutputStream(file);  
+		PrintStream out = new PrintStream(fis);  
+		System.setOut(out);
+	
 		if(argv.length == 0) {
+		
 			// The java version is only really important if you're running the results GUI.
 			String javaVersion = System.getProperty("java.version");
 			
