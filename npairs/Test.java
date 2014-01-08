@@ -1,5 +1,6 @@
 package npairs;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -9,7 +10,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.TaskType;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -31,6 +34,8 @@ import npairs.utils.PCA;
 import npairs.utils.ZScorePatternInfo;
 import npairs.utils.PredictionStats;
 
+import java.net.InetAddress;
+
 public class Test {
 
 	public static Matrix[] ppTrueClass;      
@@ -42,13 +47,6 @@ public class Test {
 	
 	public static String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	static String localDirectory = System.getProperty("user.dir" );
-
-	public static String shortenPath (Text value) {
-		String longPath = value.toString().trim();
-		String [] allNums = longPath.split("_");
-		String shortPath = allNums[0] + "_to_" +allNums[allNums.length - 1];
-		return shortPath;
-	}
 	
 	public static String shortenPath (String longPath) {
 		String [] allNums = longPath.split("_");
@@ -166,12 +164,23 @@ public class Test {
 		}
 	}
   public static class TokenizerMapper 
-       extends Mapper<Object, Text, Text, IntWritable>{
+       extends Mapper<Object, Text, Text, IntWritable> {
     
+	  String hostName;
+	  long sTime;
+	  
     //private final static IntWritable one = new IntWritable(1);
    // private Text word = new Text();
-      
-    public void map(Object key, Text value, Context context
+    
+	public void setup(Context context) throws IOException, InterruptedException, UnknownHostException {
+		hostName = InetAddress.getLocalHost().getHostName();
+		sTime = System.currentTimeMillis();
+		
+		System.out.println("Starting " + hostName + " mapper");
+	}
+	  
+    @SuppressWarnings("unchecked")
+	public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {    	
     	
     	/* String [] files = {"dataLoader.ser", "setupParams.ser", "splits.ser", "fullDataAnalysis.ser"};
@@ -204,6 +213,22 @@ public class Test {
 	        in.close();
     	}
     	 */
+    	
+    	Configuration conf = context.getConfiguration();
+    	boolean isEfficiencyTest = conf.getBoolean("isEfficiencyTest", false);
+    	
+    	String sValue = null;
+    	if (isEfficiencyTest) {
+    		System.out.println("This is an efficiency test.");
+    		sValue = value.toString().trim();
+    	} else {
+    		System.out.println("This is not an efficiency test.");
+    		String serializedIndicesMap = value.toString().trim();
+    		HashMap<String, String> map = (HashMap<String, String>)MapUtil.stringToMap(serializedIndicesMap);
+    		sValue = map.get(hostName);
+    	}
+    	
+    	System.out.println("sValue: " + sValue);
     	
     	double sTime1 = System.currentTimeMillis();
     	System.out.println("Reconstructing the dataloader object");
@@ -270,7 +295,7 @@ public class Test {
         double tTime1 = (System.currentTimeMillis() - sTime1) / 1000;
 		System.out.println("De-Serialize required objects takes [" + tTime1 + " s]");
         
-        String[] splitNums = value.toString().trim().split("_");
+        String[] splitNums = sValue.split("_");
 		int numSamples = 100;
 
         int nCVDimsSplit1 = setupParams.cvaPCSet1.length;
@@ -299,10 +324,11 @@ public class Test {
 		if (setupParams.switchTrainAndTestSets) {
 			numAnalyses = numAnalyses * 2;
 		}
-		System.out.println("Before loop for splitNums");
+
         for(String i:splitNums){
-        	System.out.println("splitNums loop with index: " + i);
-        	double start = System.currentTimeMillis();
+        	System.out.println("splitNums loop index: " + i);
+        	System.out.println("");
+
         	int splitNum = Integer.parseInt(i);
 
             Analysis firstPartAnalysis = null;
@@ -311,7 +337,7 @@ public class Test {
     		int[] split1DataVols = splits[0][splitNum];
     		int[] split2DataVols = splits[1][splitNum];
     		
-    		start = System.currentTimeMillis();
+    		double start = System.currentTimeMillis();
     		
     		if (setupParams.initFeatSelect) {
     			firstPartAnalysis = 
@@ -334,8 +360,8 @@ public class Test {
     			}
     		}
     		
-    		double tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("firstPartAnalysis: " + tTime + " seconds");    
+    	    System.out.println("firstPartAnalysis: " +  (System.currentTimeMillis() - start) / 1000 + " seconds");   
+    	    System.out.println("");
     		
     		try {
     			firstPartAnalysis.run();
@@ -359,8 +385,8 @@ public class Test {
     			++numAnalyses;
     		}
     		
-    		tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("secondPartAnalysis: " + tTime + " seconds"); 
+    	    System.out.println("if (setupParams.switchTrainAndTestSets) : " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
     		
     		//Added by Alan
     		PCA splitDataPCA1 = null;
@@ -381,8 +407,8 @@ public class Test {
     		splitDataCVA2 = secondPartAnalysis.getCVA(); // null if cva not run or training and 
     													 // test data not switched
 
-    		tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("Ran CVA on both parts: " + tTime + " seconds");
+    	    System.out.println("CVA on both parts: " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
     		
     		// Add r2 stats Matrix for current split half to r2 Matrix array.
 			if (true) {
@@ -458,42 +484,64 @@ public class Test {
 				}
 			}
 			
-			tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("if (setupParams.cvaRun): " + tTime + " seconds");
-
+    	    System.out.println("if (setupParams.cvaRun): " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
+    	    
     	    start = System.currentTimeMillis();
     	    
 			if (setupParams.initFeatSelect) {
 				if (setupParams.cvaRun) {
-					splitDataCVA1.rotateEigimsToOrigSpace(dataLoader.getEVDProjFactorMat(), 
-							dataLoader.getOrigData());
+					
+					long s = System.currentTimeMillis();
+					
+					splitDataCVA1.rotateEigimsToOrigSpace(dataLoader.getEVDProjFactorMat(), dataLoader.getOrigData());
+					
+					System.out.println("splitDataCVA1.rotateEigimsToOrigSpace: " + (System.currentTimeMillis() - s) / 1000 + " seconds");
 				}
 
 				if (setupParams.pcaRun) {
 					if (setupParams.pcEigimsToBigSpace && setupParams.saveSplitDataResults) {
+						
+						long s = System.currentTimeMillis();
+						
 						splitDataPCA1.rotateEigimsToOrigSpace(setupParams.cvaPCSet1, 
 								dataLoader.getEVDProjFactorMat(), dataLoader.getOrigData());
+						
+						System.out.println("splitDataPCA1.rotateEigimsToOrigSpace: " + (System.currentTimeMillis() - s) / 1000 + " seconds");
 					}
 				}
 
 				if (setupParams.switchTrainAndTestSets) {
 					if (setupParams.cvaRun) {
+						
+						long s = System.currentTimeMillis();
+						
 						splitDataCVA2.rotateEigimsToOrigSpace(dataLoader.getEVDProjFactorMat(), 
 								dataLoader.getOrigData());
+						
+						System.out.println("splitDataCVA2.rotateEigimsToOrigSpace: " + (System.currentTimeMillis() - s) / 1000 + " seconds");
 					}
 
 					if (setupParams.pcaRun) {
 						if (setupParams.pcEigimsToBigSpace && setupParams.saveSplitDataResults) {
+							
+							long s = System.currentTimeMillis();
+							
 							splitDataPCA2.rotateEigimsToOrigSpace(setupParams.cvaPCSet2, 
 									dataLoader.getEVDProjFactorMat(), dataLoader.getOrigData());
+							
+							System.out.println("splitDataPCA2.rotateEigimsToOrigSpace: " + (System.currentTimeMillis() - s) / 1000 + " seconds");
+							
 						}
 					}
 				}
 			}
 
-			tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("if (setupParams.initFeatSelect): " + tTime + " seconds");
-			
+    	    System.out.println("if (setupParams.initFeatSelect): " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
+    	    
+    	    start = System.currentTimeMillis();
+    	    
 //			Save split results in ASCII format:
 			if (setupParams.saveSplitDataResults) {
 				if (setupParams.pcaRun) {
@@ -526,9 +574,9 @@ public class Test {
 				}
 			}
 
-			tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("if (setupParams.saveSplitDataResults): " + tTime + " seconds");
-			
+    	    System.out.println("if (setupParams.saveSplitDataResults): " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
+    	    
     	    start = System.currentTimeMillis();
     	    
 			if (setupParams.switchTrainAndTestSets) {
@@ -574,9 +622,9 @@ public class Test {
 				
 			} // end if switch train/test 
 
-			tTime = (System.currentTimeMillis() - start) / 1000;
-    	    System.out.println("if (setupParams.switchTrainAndTestSets): " + tTime + " seconds");
-
+    	    System.out.println("if (setupParams.switchTrainAndTestSets): " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+    	    System.out.println("");
+    	    
 			count ++;
 			// Prediction metrics can be calculated whenever there is a test 
 			// set (or equivalently in NPAIRS, whenever resampling is done)
@@ -592,95 +640,55 @@ public class Test {
         
         double sTime = System.currentTimeMillis();	
 		/******************Serialize objects*********************/
-		FileSystem fs4 = FileSystem.get(context.getConfiguration());
-		Path temp1 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgCVScoresTrain_" + Test.shortenPath(value));
-		ObjectOutputStream os1 = new ObjectOutputStream(fs4.create(temp1));
-		os1.writeObject(avgCVScoresTrain);
-		os1.flush();
-		os1.reset();
-		os1.close();
-		Path temp2 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgCVScoresTest_" + Test.shortenPath(value));
-		ObjectOutputStream os2 = new ObjectOutputStream(fs4.create(temp2));
-		os2.writeObject(avgCVScoresTest);
-		os2.flush();
-		os2.reset();
-		os2.close();
-		Path temp3 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgSpatialPattern_" + Test.shortenPath(value));
-		ObjectOutputStream os3 = new ObjectOutputStream(fs4.create(temp3));
-		os3.writeObject(avgSpatialPattern);
-		os3.flush();
-		os3.reset();
-		os3.close();
-		Path temp4 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgZScorePattern_" + Test.shortenPath(value));
-		ObjectOutputStream os4 = new ObjectOutputStream(fs4.create(temp4));
-		os4.writeObject(avgZScorePattern);
-		os4.flush();
-		os4.reset();
-		os4.close();		
-		Path temp5 = new Path(hadoopDirectory + "out_npairsj_ser/", "avgNoisePattern_" + Test.shortenPath(value));
-		ObjectOutputStream os5 = new ObjectOutputStream(fs4.create(temp5));
-		os5.writeObject(avgNoisePattern);
-		os5.flush();
-		os5.reset();
-		os5.close();
-		Path temp6 = new Path(hadoopDirectory + "out_npairsj_ser/", "ppTrueClass_" + Test.shortenPath(value));
-		ObjectOutputStream os6 = new ObjectOutputStream(fs4.create(temp6));
-		os6.writeObject(ppTrueClass);
-		os6.flush();
-		os6.reset();
-		os6.close();
-		Path temp7 = new Path(hadoopDirectory + "out_npairsj_ser/", "sqrdPredError_" + Test.shortenPath(value));
-		ObjectOutputStream os7 = new ObjectOutputStream(fs4.create(temp7));
-		os7.writeObject(sqrdPredError);
-		os7.flush();
-		os7.reset();
-		os7.close();
-		Path temp8 = new Path(hadoopDirectory + "out_npairsj_ser/", "predClass_" + Test.shortenPath(value));
-		ObjectOutputStream os8 = new ObjectOutputStream(fs4.create(temp8));
-		os8.writeObject(predClass);
-		os8.flush();
-		os8.reset();
-		os8.close();
-		Path temp9 = new Path(hadoopDirectory + "out_npairsj_ser/", "correctPred_" + Test.shortenPath(value));
-		ObjectOutputStream os9 = new ObjectOutputStream(fs4.create(temp9));
-		os9.writeObject(correctPred);
-		os9.flush();
-		os9.reset();
-		os9.close();
-		Path temp10 = new Path(hadoopDirectory + "out_npairsj_ser/", "ppAllClasses_" + Test.shortenPath(value));
-		ObjectOutputStream os10 = new ObjectOutputStream(fs4.create(temp10));
-		os10.writeObject(ppAllClasses);
-		os10.flush();
-		os10.reset();
-		os10.close();
-		Path temp11 = new Path(hadoopDirectory + "out_npairsj_ser/", "r2_" + Test.shortenPath(value));
-		ObjectOutputStream os11 = new ObjectOutputStream(fs4.create(temp11));
-		os11.writeObject(r2);
-		os11.flush();
-		os11.reset();
-		os11.close();
+		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
+		String dir = hadoopDirectory + "out_npairsj_ser/";
+		String tail = Test.shortenPath(sValue);
 		
-		Path temp12 = new Path(hadoopDirectory + "out_npairsj_ser/", "corrCoeffs_" + Test.shortenPath(value));
-		ObjectOutputStream os12 = new ObjectOutputStream(fs4.create(temp12));
-		os12.writeObject(corrCoeffs);
-		os12.flush();
-		os12.reset();
-		os12.close();
-		
-		Path temp13 = new Path(hadoopDirectory + "out_npairsj_ser/", "noisePattStdDev_" + Test.shortenPath(value));
-		ObjectOutputStream os13 = new ObjectOutputStream(fs4.create(temp13));
-		os13.writeObject(noisePattStdDev);
-		os13.flush();
-		os13.reset();
-		os13.close();
-		
+		writeObjectToPathInFileSystem(avgCVScoresTrain, new Path(dir,"avgCVScoresTrain_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(avgCVScoresTest, new Path(dir,"avgCVScoresTest_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(avgSpatialPattern, new Path(dir,"avgSpatialPattern_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(avgZScorePattern, new Path(dir,"avgZScorePattern_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(avgNoisePattern, new Path(dir,"avgNoisePattern_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(ppTrueClass, new Path(dir,"ppTrueClass_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(sqrdPredError, new Path(dir,"sqrdPredError_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(predClass, new Path(dir,"predClass_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(correctPred, new Path(dir,"correctPred_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(ppAllClasses, new Path(dir,"ppAllClasses_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(r2, new Path(dir,"r2_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(corrCoeffs, new Path(dir,"corrCoeffs_" + tail), fileSystem);
+		writeObjectToPathInFileSystem(noisePattStdDev, new Path(dir,"noisePattStdDev_" + tail), fileSystem);
+
 		double tTime = (System.currentTimeMillis() - sTime) / 1000;
 		System.out.println("Serialization takes [" + tTime + " s]");
 		
 		/*******************************************************************/
-        
+    }
+    
+    public void cleanup(Context context) throws IOException, InterruptedException {
+    	long eTime = System.currentTimeMillis();
+    	long tTime = (eTime - sTime) /1000;
+    	String output = "" + tTime;
+    	writeStringToPathInFileSystem(output, new Path(hadoopDirectory + "efficiencies", hostName), FileSystem.get(context.getConfiguration()));
+    	
+    	System.out.println(hostName + " mapper took " + tTime + " seconds");
     }
  }
+  
+  public static void writeObjectToPathInFileSystem(Object obj, Path path, FileSystem fs) throws IOException {
+	  ObjectOutputStream os = new ObjectOutputStream(fs.create(path));
+	  os.writeObject(obj);
+	  os.flush();
+	  os.reset();
+	  os.close();
+  }
+  
+  public static void writeStringToPathInFileSystem(String str, Path path, FileSystem fs) throws IOException {
+	  PrintWriter pw = new PrintWriter(fs.create(path));
+	  pw.write(str);
+	  pw.flush();
+	  pw.close();
+  }
+  
 /*
   
   public static class IntSumReducer 
@@ -746,9 +754,12 @@ public class Test {
   //}
 
   public static void main(String[] args) throws Exception {
-      
+    
 	Configuration conf = new Configuration();
-    String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+	String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+    boolean isEfficiencyTest = otherArgs[2].equals("efficiencyTest");
+    
+    conf.setBoolean("isEfficiencyTest", isEfficiencyTest);
     
     Job job = new Job(conf, "test");
     job.setJarByClass(Test.class);
@@ -764,8 +775,13 @@ public class Test {
     double start = System.currentTimeMillis();
     System.out.println("starting to move tmp serialized files to HDFS");
     
-    //starting to move tmp serialized files to HDFS
     FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
+    
+	Path efficienciesPath = new Path(hadoopDirectory, "efficiencies");
+	if(hdfsFileSystem.exists(efficienciesPath)){
+		hdfsFileSystem.delete(efficienciesPath, true);
+	}
+	hdfsFileSystem.mkdirs(efficienciesPath);
     
     Path out = new Path(hadoopDirectory + "out");
     if(hdfsFileSystem.exists(out)){
@@ -776,13 +792,14 @@ public class Test {
     if(hdfsFileSystem.exists(in)){
     	hdfsFileSystem.delete(in, true);
     }
-    
+
     Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser");
     if(hdfsFileSystem.exists(hdfs_out)){
     	hdfsFileSystem.delete(hdfs_out, true);
     }
     hdfsFileSystem.mkdirs(hdfs_out);
     
+    Path local = new Path(localDirectory);
     Path local1 = new Path("setupParams.ser");
     Path local2 = new Path("splits.ser");
     Path local3 = new Path("Hadoop_input_files/");
@@ -803,10 +820,11 @@ public class Test {
     job.waitForCompletion(true);
     double tTime = (System.currentTimeMillis() - sTime) / 1000;
     System.out.println("hadoop job takes: " + tTime + "seconds...");    
-        
-    //move files from HDFS to local FS
-    ///Path local6 = new Path("/home/alanlu/NPAIRS/");
-    Path local6 = new Path(localDirectory);
-    hdfsFileSystem.copyToLocalFile(true, hdfs_out, local6);
+    
+    if (isEfficiencyTest) {
+    	hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+    } else {
+        hdfsFileSystem.copyToLocalFile(true, hdfs_out, local);
+    }    
   }
 }

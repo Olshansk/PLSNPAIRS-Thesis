@@ -19,10 +19,9 @@ import npairs.utils.ZScorePatternInfo;
 import npairs.io.NpairsDataLoader;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
 
 import org.apache.hadoop.fs.Path;
-
 
 import npairs.Test;
 
@@ -35,10 +34,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 // End imports for XML parsing
+import java.io.PrintWriter;
 
 public class Npairsj  {
 	
@@ -500,7 +501,8 @@ public class Npairsj  {
 	 * directories so that must also be checked. Once a full path to the file is determined, the XML file is parsed to determine
 	 * the replication info. 
 	 */
-	public static int getNumSlaves() {
+	
+	public static int getNumAvailableSlaves() {
 		try {
 
 			String hadoop_loc = "";
@@ -524,7 +526,7 @@ public class Npairsj  {
 			String slaves_loc = "";
 			if (hadoop_version.charAt(0) == '2') {
 				hdfs_loc = hadoop_loc + "/etc/hadoop/hdfs-site.xml";
-				 slaves_loc = hadoop_loc + "/etc/hadoop/slaves";
+				slaves_loc = hadoop_loc + "/etc/hadoop/slaves";
 			} else {
 				hdfs_loc = hadoop_loc + "/conf/hdfs-site.xml";
 				slaves_loc = hadoop_loc + "/conf/slaves";
@@ -575,37 +577,106 @@ public class Npairsj  {
 		 }
 		 return -1;
 	}
-		
 	
-	/** Runs split analyses and accumulates summary split results */
+	private void createParentDirectoryIfNecessary(File file) {
+		File parent_directory = file.getParentFile();
+		if (null != parent_directory) {
+		    parent_directory.mkdirs();
+		}
+	}
 	
-	private void runSplitAnalyses() throws NpairsjException, IOException {
+	private void writeStringToFile(String outString, String fileName) throws IOException {
+		File file = new File(fileName);
+		createParentDirectoryIfNecessary(file);
+		BufferedWriter out = new BufferedWriter(new FileWriter(file));			
+	    out.write(outString);
+	    out.close();
+	}
+	
+	private HashMap <String, Double> getRelativeSlaveEfficiencies(int numSlaves) throws IOException, NpairsjException {
+		for(int i = 0; i < numSlaves; i++){
+			writeStringToFile("0", "Hadoop_input_files/" + Integer.toString(i));
+		}
+			
+		String[] argv;
+		argv = new String[3];
+		argv[0] = "Hadoop_input_files";
+		argv[1] = "out";
+		argv[2] = "efficiencyTest";
 		
-		int numSamples = splits[0].length; // numSamples == min(setupParams.numSplits, max num splits)		
-		output.println("No. splits: " + numSamples);
-		
-		int totalNumSplitAnalyses = numSamples;
-		if (setupParams.switchTrainAndTestSets) {
-			totalNumSplitAnalyses = 2 * numSamples;
+		try {
+			Test.main(argv);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
-		initPredStats(totalNumSplitAnalyses);
-		if (computeR2) {
-			initR2Results(totalNumSplitAnalyses);  
+		HashMap <String, Double> efficiencyMap = new HashMap <String, Double>();
+		HashMap <String, Double> timeMap = new HashMap<String, Double>();
+		double total = 0;
+		
+		File dir = new File("efficiencies");
+		for (File child : dir.listFiles()) {
+			BufferedReader in = new BufferedReader(new FileReader(child));
+			String host = child.getName();
+			String sTime = in.readLine();
+			
+			System.out.println(host + " " + sTime);
+			
+			double time = -1;
+			try {
+				time = Double.parseDouble(sTime);
+			} catch (NumberFormatException e) {
+				in.close();
+				continue;
+			}
+			total += time;
+			timeMap.put(host, time);
+			in.close();
 		}
-
-		if (setupParams.cvaRun) {
-			initCVASplitResults(numSamples);
+		  
+		Set keys = timeMap.keySet();
+		if (keys.size() == 0) {
+			throw new NpairsjException("Error. No host mapper efficiency files were found.");
+		} else if (keys.size() == 1) {
+			System.out.println("Only one host was found");
+			String key = (String)keys.iterator().next();
+			double fractionWork = 1.0;
+			efficiencyMap.put(key, fractionWork);
+			System.out.println(key + " " + fractionWork);
+		} else {
+			System.out.println("Multiple hosts were found");
+			for (String key: timeMap.keySet()) {
+				 double fractionTime = timeMap.get(key) / total;
+				 double fractionWork = 1.0 - fractionTime; //because less time => faster machine
+				 efficiencyMap.put(key, fractionWork);
+				 System.out.println(key + " " + fractionWork);
+			}
 		}
-
-		int[] vCountTr = new int[setupParams.numVols]; 	// each element incremented whenever corresp.
-														// vol (row of input data) incl. in sample 
-        												// training data
-		int[] vCountTe = new int[setupParams.numVols]; 	// each element incremented whenever corresp.
-        												// vol incl. in sample test data
+		  
+		return efficiencyMap;
+	}
 	
-		int numAnalyses = 0;
+	private void removeUselessSlaves(HashMap <String, Double> origMap, int numSamples) {
+		Iterator <Map.Entry<String,Double>> it = origMap.entrySet().iterator();
+		double totalRemoved = 0;
+		while (it.hasNext()) {
+			Map.Entry<String,Double> entry = it.next();
+			double fractionWork = entry.getValue();
+			int numSamplesPerSlave = (int) Math.round(fractionWork * ((double)numSamples));
+			System.out.println(numSamplesPerSlave);
+			if (numSamplesPerSlave == 0) {
+			  it.remove();
+			  totalRemoved += fractionWork;
+			}
+		 }
 
+		 double addPerSlaveRemaining = totalRemoved / origMap.size();
+		 for (String key : origMap.keySet()) {
+		 	origMap.put(key, origMap.get(key) + addPerSlaveRemaining);
+		 }
+	}
+	
+	private void serializeSerObjects() {
 		double sTime = System.currentTimeMillis();
 		
 		System.out.println("starting to serialized fullDataAnalysis object");
@@ -659,15 +730,94 @@ public class Npairsj  {
 		*/
 		double tTime = (System.currentTimeMillis() - sTime) / 1000;	
 		System.out.println("Serialization takes: " + tTime + "seconds in total");
+	}
+	
+	/** Runs split analyses and accumulates summary split results 
+	 * @throws Exception */
+	
+	private void runSplitAnalyses() throws IOException, NpairsjException {
+		int numSamples = splits[0].length; // numSamples == min(setupParams.numSplits, max num splits)		
+		output.println("No. splits: " + numSamples);
 		
-		int numSlaves = getNumSlaves();
-		System.out.println("Number of slaves: " + numSlaves);
+		int totalNumSplitAnalyses = numSamples;
+		if (setupParams.switchTrainAndTestSets) {
+			totalNumSplitAnalyses = 2 * numSamples;
+		}
 		
+		initPredStats(totalNumSplitAnalyses);
+		if (computeR2) {
+			initR2Results(totalNumSplitAnalyses);  
+		}
+
+		if (setupParams.cvaRun) {
+			initCVASplitResults(numSamples);
+		}
+
+		int[] vCountTr = new int[setupParams.numVols]; 	// each element incremented whenever corresp.
+														// vol (row of input data) incl. in sample 
+        												// training data
+		int[] vCountTe = new int[setupParams.numVols]; 	// each element incremented whenever corresp.
+        												// vol incl. in sample test data
+	
+		int numAnalyses = 0;
+		
+		//Serialize objects
+		serializeSerObjects();
+		
+		// Get slaves
+		int numAvailableSlaves = getNumAvailableSlaves();
+		System.out.println("Number of available slaves: " + numAvailableSlaves);
+		
+		// Determine relative efficines
+		System.out.println("Starting efficiency testing...");	
+		HashMap <String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(numAvailableSlaves);
+		System.out.println("relative efficiencies calculated");
+		
+		removeUselessSlaves(relativeSlaveEfficiencies, numSamples);
+		
+		int numSlaves = relativeSlaveEfficiencies.size();
+		
+		System.out.println("Number of used slaves: " + numSlaves);
+		
+		String[] indexes = new String[numSlaves];
+		
+		delete(new File("Hadoop_input_files/"));
+		
+		//Reseliaze objects
+		serializeSerObjects();
+		
+		HashMap <String, String> slaveIndices = new HashMap<String, String>();
+        int currSplit = 0;
+        int currSlave = 0;
+        
+    	for (String key: relativeSlaveEfficiencies.keySet()) {
+			String outString = "";
+			int numPerSlave = (int) Math.round(relativeSlaveEfficiencies.get(key) * ((double)numSamples));
+			if (numPerSlave > 0) {
+                outString = currSplit + "";
+                currSplit++;
+				for (int k = 1; k < numPerSlave; k++) {
+					outString = outString + "_" + Integer.toString(currSplit);
+					currSplit++;
+				}
+			}
+			System.out.println(key + " " + outString);
+			slaveIndices.put(key, outString);
+			indexes[currSlave] = outString;
+			currSlave++;
+    	}
+    	
+    	String serializedSlaveIndecesMap = MapUtil.mapToString(slaveIndices);
+    	
+    	for (int i = 0; i < numSlaves; i++) {
+    		writeStringToFile(serializedSlaveIndecesMap, "Hadoop_input_files/" + Integer.toString(i));
+		}
+
+/*
 		int numPerSlave = numSamples / numSlaves;
-		String[] indexes = new String[numSlaves]; 
-		
 		for(int i = 0; i < numSlaves; i++){
-			String outString = null;
+			String outString = "";
+			int numPerSlave = (int) Math.round(relativeSlaveEfficiencies[i] * ((double)numSamples));
 			
 			if(i == (numSlaves - 1)){
 				for(int j=0 ; j < (numSamples - i*numPerSlave); j++){
@@ -701,13 +851,14 @@ public class Npairsj  {
 		    
 		    indexes[i] = outString;
 		}
-		
+*/
 		/********************starting to run hadoop************************************/
 		System.out.println("Starting to run hadoop...");		
 		String[] argv;
-		argv = new String[2];
+		argv = new String[3];
 		argv[0] = "Hadoop_input_files";
 		argv[1] = "out";
+		argv[2] = "null"; //means that this is not an efficiency test
 		
 		//Running Hadoop:
 		try {
@@ -728,6 +879,9 @@ public class Npairsj  {
 		r2_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 		
 		for(int i = 0; i < numSlaves; i++){
+			if (indexes[i].length() == 0) {
+				continue;
+			}
 			String j = Test.shortenPath(indexes[i]);
 			FileInputStream fis = new FileInputStream("out_npairsj_ser/avgCVScoresTest_" + j);
 	        ObjectInputStream ois = new ObjectInputStream(fis);

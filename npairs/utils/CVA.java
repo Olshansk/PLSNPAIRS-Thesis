@@ -792,6 +792,12 @@ public class CVA implements Serializable{
 	 * @param origData
 	 */
 	public void rotateEigimsToOrigSpace(Matrix projFactorMat, Matrix origData) {
+		
+		long s = System.currentTimeMillis();
+		System.out.println("");
+		System.out.println("rotateEigimsToOrigSpace");
+		System.out.println("--------------------------");
+		
 		if (cvaInOrigSpace) {
 			cvaEigimsBig = cvaFeatSpEigims;
 			return;
@@ -801,11 +807,21 @@ public class CVA implements Serializable{
 		// TODO: update documentation for unweighted EVD
 		// (see PCA.rotateEigimsToOrigSpace(...) documentation for algebraic details)
 
+		s = System.currentTimeMillis();
 		Matrix P1invP = cvaFeatSpEigims.transpose().mult(projFactorMat);
-
+		System.out.println("cvaFeatSpEigims.transpose().mult(projFactorMat): " + (System.currentTimeMillis() - s) / 1000 + " seconds");
+		
+		System.out.println("P1invP rows: " + P1invP.numRows() + " P1invP cols: " + P1invP.numCols() + " origData rows: " + origData.numRows() + " origData cols: " + origData.numCols());		
+		
+		s = System.currentTimeMillis();
 		Matrix voxSpaceCVAEigims = P1invP.mult(origData);
-
+		System.out.println("P1invP.mult(origData): " + (System.currentTimeMillis() - s) / 1000 + " seconds");
+		
+		s = System.currentTimeMillis();
 		cvaEigimsBig = voxSpaceCVAEigims.transpose();
+		System.out.println("voxSpaceCVAEigims.transpose(): " + (System.currentTimeMillis() - s) / 1000 + " seconds");
+		System.out.println("");
+		
 		cvaInOrigSpace = true;
 	}
 	
