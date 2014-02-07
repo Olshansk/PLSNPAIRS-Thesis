@@ -2,6 +2,7 @@ package npairs;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Security;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -18,6 +19,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.net.*;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.conf.*;
@@ -33,8 +35,6 @@ import npairs.utils.CVA;
 import npairs.utils.PCA;
 import npairs.utils.ZScorePatternInfo;
 import npairs.utils.PredictionStats;
-
-import java.net.InetAddress;
 
 public class Test {
 
@@ -217,16 +217,16 @@ public class Test {
     	Configuration conf = context.getConfiguration();
     	boolean isEfficiencyTest = conf.getBoolean("isEfficiencyTest", false);
     	
-    	String sValue = null;
-    	if (isEfficiencyTest) {
-    		System.out.println("This is an efficiency test.");
-    		sValue = value.toString().trim();
-    	} else {
-    		System.out.println("This is not an efficiency test.");
-    		String serializedIndicesMap = value.toString().trim();
-    		HashMap<String, String> map = (HashMap<String, String>)MapUtil.stringToMap(serializedIndicesMap);
-    		sValue = map.get(hostName);
-    	}
+    	String sValue = value.toString().trim();
+//    	if (isEfficiencyTest) {
+//    		System.out.println("This is an efficiency test.");
+//    		sValue = value.toString().trim();
+//    	} else {
+//    		System.out.println("This is not an efficiency test.");
+//    		String serializedIndicesMap = value.toString().trim();
+//    		HashMap<String, String> map = (HashMap<String, String>)MapUtil.stringToMap(serializedIndicesMap);
+//    		sValue = map.get(hostName);
+//    	}
     	
     	System.out.println("sValue: " + sValue);
     	
@@ -754,7 +754,7 @@ public class Test {
   //}
 
   public static void main(String[] args) throws Exception {
-    
+
 	Configuration conf = new Configuration();
 	String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
     boolean isEfficiencyTest = otherArgs[2].equals("efficiencyTest");
@@ -764,67 +764,41 @@ public class Test {
     Job job = new Job(conf, "test");
     job.setJarByClass(Test.class);
     job.setMapperClass(TokenizerMapper.class);
-    //job.setCombinerClass(IntSumReducer.class);
-    //job.setReducerClass(IntSumReducer.class);
     job.setNumReduceTasks(0);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
+    
     FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
     FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
     
-    double start = System.currentTimeMillis();
-    System.out.println("starting to move tmp serialized files to HDFS");
+
     
-    FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
-    
+/*    
 	Path efficienciesPath = new Path(hadoopDirectory, "efficiencies");
 	if(hdfsFileSystem.exists(efficienciesPath)){
 		hdfsFileSystem.delete(efficienciesPath, true);
 	}
 	hdfsFileSystem.mkdirs(efficienciesPath);
+ 
+*/
+//    Path local = new Path(localDirectory);
+//    Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser");
     
-    Path out = new Path(hadoopDirectory + "out");
+    FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
+    Path out = new Path(hadoopDirectory + otherArgs[1]);
     if(hdfsFileSystem.exists(out)){
     	hdfsFileSystem.delete(out, true);
     }
     
-    Path in = new Path(hadoopDirectory + "Hadoop_input_files");
-    if(hdfsFileSystem.exists(in)){
-    	hdfsFileSystem.delete(in, true);
-    }
-
-    Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser");
-    if(hdfsFileSystem.exists(hdfs_out)){
-    	hdfsFileSystem.delete(hdfs_out, true);
-    }
-    hdfsFileSystem.mkdirs(hdfs_out);
-    
-    Path local = new Path(localDirectory);
-    Path local1 = new Path("setupParams.ser");
-    Path local2 = new Path("splits.ser");
-    Path local3 = new Path("Hadoop_input_files/");
-   // Path local4 = new Path("dataLoader.ser");
-    Path local5 = new Path("fullDataAnalysis.ser");
-    Path hdfs = new Path(hadoopDirectory); 
-    hdfsFileSystem.copyFromLocalFile(true, local1, hdfs);
-    hdfsFileSystem.copyFromLocalFile(true, local2, hdfs);
-    hdfsFileSystem.copyFromLocalFile(false, local3, hdfs);
-   // hdfsFileSystem.copyFromLocalFile(false, local4, hdfs);    
-    hdfsFileSystem.copyFromLocalFile(false, local5, hdfs);    
-    
-    double end= (System.currentTimeMillis() - start) / 1000;    
-    System.out.println("DONE in " + end + "seconds");
-    
-    //submit hadoop job
-    double sTime = System.currentTimeMillis();
+    double sTime = System.currentTimeMillis(); 
     job.waitForCompletion(true);
     double tTime = (System.currentTimeMillis() - sTime) / 1000;
     System.out.println("hadoop job takes: " + tTime + "seconds...");    
     
-    if (isEfficiencyTest) {
-    	hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
-    } else {
-        hdfsFileSystem.copyToLocalFile(true, hdfs_out, local);
-    }    
+//    if (isEfficiencyTest) {
+//    	hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+//    } else {
+//        hdfsFileSystem.copyToLocalFile(false, hdfs_out, local);
+//    }
   }
 }
