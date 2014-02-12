@@ -31,10 +31,13 @@ import npairs.Test;
 // Start imports for XML parsing (determine number of slaves dynamically)
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -603,7 +606,6 @@ public class Npairsj {
 	 * full path to the file is determined, the XML file is parsed to determine
 	 * the replication info.
 	 */
-
 	public static String getHadoopHomeDir() {
 		try {
 			String hadoop_loc = "";
@@ -704,12 +706,11 @@ public class Npairsj {
 
 	public static int getNumAvailableMappersFromFileName(String fileName) {
 		try {	
+			System.out.println("Trying to get mapper number from: " + fileName);
 			int numMappers = -1;
-			
-			File fXmlFile = new File(fileName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+			Document doc = dBuilder.parse(new File("./" + fileName));
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("property");
 			for (int i = 0; i < nList.getLength(); i++) {
@@ -723,11 +724,21 @@ public class Npairsj {
 			}
 			
 			return numMappers;
-		} catch (Exception e) {
-			System.out.println("Exception getting the available number of mappers.");
+		} catch (IOException e) {
+			System.out.println("IOException");
 			e.printStackTrace();
 			System.exit(-1);
+		} catch (SAXException e) {
+			System.out.println("SAXException");
+			System.exit(-1);
+		} catch (IllegalArgumentException e) {
+			System.out.println("IllegalArgumentException");
+			System.exit(-1);
+		} catch (ParserConfigurationException e) {
+			System.out.println("ParserConfigurationException");
+			System.exit(-1);
 		}
+		
 		return -1; 
 	}
 	
@@ -831,8 +842,7 @@ public class Npairsj {
 		}
 	}
 
-	private void writeStringToFile(String outString, String fileName)
-			throws IOException {
+	private void writeStringToFile(String outString, String fileName) throws IOException {
 		File file = new File(fileName);
 		createParentDirectoryIfNecessary(file);
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -840,24 +850,7 @@ public class Npairsj {
 		out.close();
 	}
 
-	private HashMap<String, Double> getRelativeSlaveEfficiencies(int numSlaves)
-			throws IOException, NpairsjException {
-		for (int i = 0; i < numSlaves; i++) {
-			writeStringToFile("0", "Hadoop_input_files/" + Integer.toString(i));
-		}
-
-		String[] argv;
-		argv = new String[3];
-		argv[0] = "Hadoop_input_files";
-		argv[1] = "out";
-		argv[2] = "efficiencyTest";
-
-		try {
-			Test.main(argv);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	private HashMap<String, Double> getRelativeSlaveEfficiencies(String [] slaves) throws IOException, NpairsjException {
 		HashMap<String, Double> efficiencyMap = new HashMap<String, Double>();
 		HashMap<String, Double> timeMap = new HashMap<String, Double>();
 		double total = 0;
@@ -882,10 +875,9 @@ public class Npairsj {
 			in.close();
 		}
 
-		Set keys = timeMap.keySet();
+		Set <String> keys = timeMap.keySet();
 		if (keys.size() == 0) {
-			throw new NpairsjException(
-					"Error. No host mapper efficiency files were found.");
+			throw new NpairsjException("Error. No host mapper efficiency files were found.");
 		} else if (keys.size() == 1) {
 			System.out.println("Only one host was found");
 			String key = (String) keys.iterator().next();
@@ -896,8 +888,7 @@ public class Npairsj {
 			System.out.println("Multiple hosts were found");
 			for (String key : timeMap.keySet()) {
 				double fractionTime = timeMap.get(key) / total;
-				double fractionWork = 1.0 - fractionTime; // because less time
-															// => faster machine
+				double fractionWork = 1.0 - fractionTime; // because less time => faster machine
 				efficiencyMap.put(key, fractionWork);
 				System.out.println(key + " " + fractionWork);
 			}
@@ -906,8 +897,7 @@ public class Npairsj {
 		return efficiencyMap;
 	}
 
-	private void removeUselessSlaves(HashMap<String, Double> origMap,
-			int numSamples) {
+	private void removeUselessSlaves(HashMap<String, Double> origMap,int numSamples) {
 		Iterator<Map.Entry<String, Double>> it = origMap.entrySet().iterator();
 		double totalRemoved = 0;
 		while (it.hasNext()) {
@@ -968,8 +958,7 @@ public class Npairsj {
 		 * out.close(); } catch(IOException ex) { ex.printStackTrace(); }
 		 */
 		double tTime = (System.currentTimeMillis() - sTime) / 1000;
-		System.out
-				.println("Serialization takes: " + tTime + "seconds in total");
+		System.out.println("Serialization takes: " + tTime + "seconds in total");
 	}
 
 	/**
@@ -977,13 +966,57 @@ public class Npairsj {
 	 * 
 	 * @throws Exception
 	 */
-
-	private void copyFilesToHDFS() {
-		
+	
+	private void deleteHadoopInputFiles(String [] slaves) {
+		// Delete any existing directories using for the input files of each slave
+		for (String slave: slaves) {
+			FileUtils.deleteQuietly(new File(slave));
+		}
 	}
 	
-	private void copyFilesFromHDFS() {
-		
+	private void copyHadoopInputFilesToHDFS(FileSystem fs, String [] slaves) throws IOException {
+		Path hdfs = new Path(Test.hadoopDirectory);
+		for (String slave : slaves) {
+			Path hadoop_slave = new Path(Test.hadoopDirectory + slave);
+			deleteDirectoryInFileSystem(fs, hadoop_slave);
+			fs.copyFromLocalFile(false, new Path(slave), hdfs);
+		}
+	}
+	
+	private void deleteDirectoryInFileSystem(FileSystem fs, Path path) throws IOException {
+		if (fs.exists(path)) {
+			fs.delete(path, true);
+		}
+	}
+	
+	private void deleteAndRemakeDirectoryInFileSystem(FileSystem fs, Path path) throws IOException{
+		deleteDirectoryInFileSystem(fs, path);
+		fs.mkdirs(path);
+	}
+	
+	private void executeHadoop(String [] slaves) {
+		ExecutorService service = Executors.newCachedThreadPool();		
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+		for (final String slave : slaves) {
+			Runnable runnable = new Runnable() {
+				public void run() {
+					sshExecute(slave, "hduser", "cd /home/hduser/NPAIRS_Files/NPAIRS/; /usr/local/hadoop/bin/hadoop jar npairs_hadoop.jar "+ slave + " out_" + slave);
+				}
+			};
+			futures.add((Future<?>) service.submit(runnable));
+		}
+
+		service.shutdown();
+
+		for (Future<?> future : futures) {
+			try {
+				future.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void runSplitAnalyses() throws IOException, NpairsjException {
@@ -1020,79 +1053,106 @@ public class Npairsj {
 
 		int numAnalyses = 0;
 
+		// Create a reference ot the local and hadoop directory
+		Path local = new Path(Test.localDirectory);
+		Path hdfs = new Path(Test.hadoopDirectory);
+		
 		// Serialize objects
 		serializeSerObjects();
 
-		// Get slaves
-		// int numAvailableSlaves = getNumAvailableSlaves();
+		// Copy data to hdfs thatll be require for efficiency testing and for the actual analysis 			
+		FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
 
-		// Determine relative efficines
-		// System.out.println("Starting efficiency testing...");
-		// HashMap <String, Double> relativeSlaveEfficiencies =
-		// getRelativeSlaveEfficiencies(numAvailableSlaves);
-		// System.out.println("relative efficiencies calculated");
-		// removeUselessSlaves(relativeSlaveEfficiencies, numSamples);
-		// int numSlaves = relativeSlaveEfficiencies.size();
+		Path localSetupParams = new Path("setupParams.ser");
+		hdfsFileSystem.copyFromLocalFile(false, localSetupParams, hdfs);
 
-		// System.out.println("Number of used slaves: " + numSlaves);
+		Path localSplits = new Path("splits.ser");
+		hdfsFileSystem.copyFromLocalFile(false, localSplits, hdfs);
 
-		// delete(new File("Hadoop_input_files/"));
+		Path localfullDataAnalysis = new Path("fullDataAnalysis.ser");
+		hdfsFileSystem.copyFromLocalFile(false, localfullDataAnalysis, hdfs);
 
-		// Reseliaze objects
-		// serializeSerObjects();
-
-		// for (String string : slaves) {
-		// writeStringToFile("0", "Hadoop_input_files/" + Integer.toString(i));
-		// }
-		
-		// Get the list of slaves
+		// Get the list and numberof slaves
 		String[] slaves = getListOfSlaves();
-		
-		// Get the number of slaves
 		int numSlaves = slaves.length;
 		System.out.println("Number of available slaves: " + numSlaves);
 
-		// Delete any existing directories using for the input files of each slave
-		for (String slave: slaves) {
-			FileUtils.deleteQuietly(new File(slave));
+		// Delete old input files if they exist
+		deleteHadoopInputFiles(slaves);		
+		
+		// Create a path to the output directory and delete it in case it exists
+		Path hdfs_out = new Path(Test.hadoopDirectory + "out_npairsj_ser");
+		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
+		
+		// Create a path to store the efficincies
+		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
+		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
+		FileUtils.deleteQuietly(new File("efficiencies"));
+		
+		// Create 1 mapper for each slave thats only responsbile for the 0th split
+		for (String slave : slaves) {
+			writeStringToFile("0", slave + "/0");
 		}
+		
+		// Copy hadoop input files over to hdfs
+		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
+		
+		// Execute efficiency testing
+		System.out.println("Starting efficiency testing...");
+		executeHadoop(slaves);
+		System.out.println("relative efficiencies calculated");
+		
+		// Copy the efficines to the local path
+		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+		
+		// Retrieve relative efficiencies
+		HashMap<String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(slaves);
 		
 		// Determine the number of mappers per machine
 		HashMap<String, Integer> mappersPerHost = new HashMap<String, Integer>();
 		for (String slave: slaves) {
 			String fileName = "mapred-site-" + slave + ".xml";
-			String command = "scp hduser@" + slave + "/usr/local/hadoop/etc/hadoop/mapred-site.xml " + fileName; 
-			Process process = Runtime.getRuntime().exec(command);
-//			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//			sshExecute(slave, "hduser", "scp hduser@" + slave + ":/usr/local/hadoop/etc/hadoop/mapred-site.xml " + fileName);
+			String command = "scp hduser@" + slave + ":/usr/local/hadoop/etc/hadoop/mapred-site.xml " + fileName; 
+			Process p =  Runtime.getRuntime().exec(command);
+			try {
+			p.waitFor();
+			} catch (InterruptedException e) {
+				System.out.println("Process interrupted while copying mapper file.");
+				System.exit(-1);
+			}
 			mappersPerHost.put(slave, getNumAvailableMappersFromFileName(fileName));
-			FileUtils.deleteQuietly(new File(fileName));
+			File file = new File(fileName);
+			file.delete();
 		}
-		
 		System.out.println(mappersPerHost);
-
-		// Determine overall efficiencies per host
-		HashMap<String, Double> relativeSlaveEfficiencies = new HashMap<String, Double>();
-		for (String slave: slaves) {
-			relativeSlaveEfficiencies.put(slave, 0.5);
-		}
 		
-		double totalSlavesWeight = 0;
+		// Determine the total number of mappers available
 		int numMappers = 0;
 		for (String key : mappersPerHost.keySet()) {
-			int mapperPerHost = mappersPerHost.get(key);
-			double efficiencyPerHost = relativeSlaveEfficiencies.get(key);
-			numMappers += mapperPerHost;
-			totalSlavesWeight += ((double)mapperPerHost) * efficiencyPerHost ;
+			numMappers += mappersPerHost.get(key);
 		}
-		
 		System.out.println("Total mappers available: " + numMappers);
-		System.out.println("Total slaves weight: " + totalSlavesWeight);
 		
+		// Allocate the array to store the indexes for each mapper in the future
 		String[] indexes = new String[numMappers];
+		
+		// Determine the total slave weight
+		double totalSlavesWeight = 0;
+		for (String key : mappersPerHost.keySet()) {
+			totalSlavesWeight += ((double)mappersPerHost.get(key)) * relativeSlaveEfficiencies.get(key) ;
+		}
+		System.out.println("Total slaves weight: " + totalSlavesWeight);
 
+		// Delete the output directory after efficiency test
+		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
+		
+		// Delete old input files if they exist
+		deleteHadoopInputFiles(slaves);
 
-		// Create the hadoop input files for each mapper for each machine
+		// Reseliaze objects
+//		 serializeSerObjects();
+		
+		// Create the hadoop input files for each mapper for each machine using efficinecies and available mappers
 		int currSplit = 0;
 		int currMapper = 0;
 		for (String key : relativeSlaveEfficiencies.keySet()) {
@@ -1126,97 +1186,19 @@ public class Npairsj {
 			}
 		}
 
-		FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
-
-		// Path efficienciesPath = new Path(hadoopDirectory, "efficiencies");
-		// if(hdfsFileSystem.exists(efficienciesPath)){
-		// hdfsFileSystem.delete(efficienciesPath, true);
-		// }
-		// hdfsFileSystem.mkdirs(efficienciesPath);
-
-		Path out = new Path(Test.hadoopDirectory + "out");
-		if (hdfsFileSystem.exists(out)) {
-			hdfsFileSystem.delete(out, true);
-		}
-
-		Path hdfs_out = new Path(Test.hadoopDirectory + "out_npairsj_ser");
-		if (hdfsFileSystem.exists(hdfs_out)) {
-			hdfsFileSystem.delete(hdfs_out, true);
-		}
-		hdfsFileSystem.mkdirs(hdfs_out);
-
-		double startMovingLocalFilesToHDFS = System.currentTimeMillis();
-		System.out.println("starting to move tmp serialized files to HDFS");
-
-		Path hdfs = new Path(Test.hadoopDirectory);
-
-		Path localSetupParams = new Path("setupParams.ser");
-		hdfsFileSystem.copyFromLocalFile(true, localSetupParams, hdfs);
-
-		Path localSplits = new Path("splits.ser");
-		hdfsFileSystem.copyFromLocalFile(true, localSplits, hdfs);
-
-		Path localfullDataAnalysis = new Path("fullDataAnalysis.ser");
-		hdfsFileSystem.copyFromLocalFile(false, localfullDataAnalysis, hdfs);
-
-		for (String slave : slaves) {
-			Path local_slave = new Path(slave);
-			Path hadoop_slave = new Path(Test.hadoopDirectory + slave);
-			if (hdfsFileSystem.exists(hadoop_slave)) {
-				hdfsFileSystem.delete(hadoop_slave, true);
-			}
-			hdfsFileSystem.copyFromLocalFile(true, local_slave, hdfs);
-		}
-
-		double end = (System.currentTimeMillis() - startMovingLocalFilesToHDFS) / 1000;
-		System.out.println("DONE in " + end + "seconds");
-
-//		int threads = Runtime.getRuntime().availableProcessors();
-//		ExecutorService service = Executors.newFixedThreadPool(threads);
-		ExecutorService service = Executors.newCachedThreadPool();
+		// Copy hadoop input files over to hdfs
+		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
 		
-		List<Future<?>> futures = new ArrayList<Future<?>>();
-		for (final String key : relativeSlaveEfficiencies.keySet()) {
-			Runnable runnable = new Runnable() {
-				public void run() {
-					sshExecute(key, "hduser", "cd /home/hduser/NPAIRS_Files/NPAIRS/; /usr/local/hadoop/bin/hadoop jar npairs_hadoop.jar "+ key + " out_" + key + " null");
-				}
-			};
-			futures.add((Future<?>) service.submit(runnable));
-		}
-
-		service.shutdown();
-
-		for (Future<?> future : futures) {
-			try {
-				future.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-		}
+		//Delete output from previous potential runs
+		FileUtils.deleteQuietly(new File("out_npairsj_ser"));
 		
-		Path local = new Path(Test.localDirectory);
+		// Execute the hadoop jobs
+		executeHadoop(slaves);
+		
+		// Copy output files from hdfs to local
 	    hdfsFileSystem.copyToLocalFile(false, hdfs_out, local);
 	    
-		/******************** starting to run hadoop ************************************/
-		// System.out.println("Starting to run hadoop...");
-		// String[] argv;
-		// argv = new String[3];
-		// argv[0] = "Hadoop_input_files";
-		// argv[1] = "out";
-		// argv[2] = "null"; //means that this is not an efficiency test
-		//
-		// //Running Hadoop:
-		// try {
-		// Test.main(argv);
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		/************************** End of Running hadoop ********************************/
-
+	    // Use generated results to calculate all the NPAIRS values
 		numSlaves = numMappers;
 
 		ppTrueClass_temp = new Matrix[numSlaves][totalNumSplitAnalyses];

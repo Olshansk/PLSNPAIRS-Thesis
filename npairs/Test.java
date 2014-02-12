@@ -214,20 +214,7 @@ public class Test {
     	}
     	 */
     	
-    	Configuration conf = context.getConfiguration();
-    	boolean isEfficiencyTest = conf.getBoolean("isEfficiencyTest", false);
-    	
     	String sValue = value.toString().trim();
-//    	if (isEfficiencyTest) {
-//    		System.out.println("This is an efficiency test.");
-//    		sValue = value.toString().trim();
-//    	} else {
-//    		System.out.println("This is not an efficiency test.");
-//    		String serializedIndicesMap = value.toString().trim();
-//    		HashMap<String, String> map = (HashMap<String, String>)MapUtil.stringToMap(serializedIndicesMap);
-//    		sValue = map.get(hostName);
-//    	}
-    	
     	System.out.println("sValue: " + sValue);
     	
     	double sTime1 = System.currentTimeMillis();
@@ -757,9 +744,6 @@ public class Test {
 
 	Configuration conf = new Configuration();
 	String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-    boolean isEfficiencyTest = otherArgs[2].equals("efficiencyTest");
-    
-    conf.setBoolean("isEfficiencyTest", isEfficiencyTest);
     
     Job job = new Job(conf, "test");
     job.setJarByClass(Test.class);
@@ -771,19 +755,6 @@ public class Test {
     FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
     FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
     
-
-    
-/*    
-	Path efficienciesPath = new Path(hadoopDirectory, "efficiencies");
-	if(hdfsFileSystem.exists(efficienciesPath)){
-		hdfsFileSystem.delete(efficienciesPath, true);
-	}
-	hdfsFileSystem.mkdirs(efficienciesPath);
- 
-*/
-//    Path local = new Path(localDirectory);
-//    Path hdfs_out = new Path(hadoopDirectory + "out_npairsj_ser");
-    
     FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
     Path out = new Path(hadoopDirectory + otherArgs[1]);
     if(hdfsFileSystem.exists(out)){
@@ -794,11 +765,5 @@ public class Test {
     job.waitForCompletion(true);
     double tTime = (System.currentTimeMillis() - sTime) / 1000;
     System.out.println("hadoop job takes: " + tTime + "seconds...");    
-    
-//    if (isEfficiencyTest) {
-//    	hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
-//    } else {
-//        hdfsFileSystem.copyToLocalFile(false, hdfs_out, local);
-//    }
   }
 }
