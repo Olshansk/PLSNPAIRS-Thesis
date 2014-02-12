@@ -242,7 +242,13 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 			}
 			long start=System.currentTimeMillis();
 
-			for (int i = firstAnalysisIdx; i <= lastAnalysisIdx; ++i) {
+			int [] qArray = new int [] {1, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400};
+			firstAnalysisIdx = qArray[0];
+			lastAnalysisIdx = qArray[qArray.length - 1];
+			
+			for (int qIdx = 0; qIdx < qArray.length; qIdx++) {
+				int i = qArray[qIdx];
+			
 				if (numNPAIRS > 1) {
 					String runMsg = "Running analysis # " + (i + 1) + "... ";
 					progress.startTask(runMsg, 
@@ -305,23 +311,24 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 						{
 							ex.printStackTrace();
 						}
-						
-						FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
-						
-					    Path hdfs = new Path(Test.hadoopDirectory);
-					    if(hdfsFileSystem.exists(hdfs)){    	
-					    	FileStatus fs = hdfsFileSystem.getFileStatus(hdfs);
-					    	if (fs.isFile()) {
-					    		hdfsFileSystem.delete(hdfs, true);
-					    		hdfsFileSystem.mkdirs(hdfs);
-					    	}
-					    } else {
-					    	hdfsFileSystem.mkdirs(hdfs);
-					    }
-						
-					    Path local = new Path("dataLoader.ser");
-					    
-					    hdfsFileSystem.copyFromLocalFile(true, local, hdfs);
+//						
+//						FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
+//						
+//					    Path hdfs = new Path(Test.hadoopDirectory);
+////					    Npairsj.deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs);
+//					    if(hdfsFileSystem.exists(hdfs)){    	
+//					    	FileStatus fs = hdfsFileSystem.getFileStatus(hdfs);
+//					    	if (fs.isFile()) {
+//					    		hdfsFileSystem.delete(hdfs, true);
+//					    		hdfsFileSystem.mkdirs(hdfs);
+//					    	}
+//					    } else {
+//					    	hdfsFileSystem.mkdirs(hdfs);
+//					    }
+//						
+//					    Path local = new Path("dataLoader.ser");
+//					    
+//					    hdfsFileSystem.copyFromLocalFile(true, local, hdfs);
 					}
 					Npairsj npairsj = new Npairsj(ndl, nsp, matlibType);
 

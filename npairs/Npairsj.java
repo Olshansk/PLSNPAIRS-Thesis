@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -983,13 +984,13 @@ public class Npairsj {
 		}
 	}
 	
-	private void deleteDirectoryInFileSystem(FileSystem fs, Path path) throws IOException {
+	private static void deleteDirectoryInFileSystem(FileSystem fs, Path path) throws IOException {
 		if (fs.exists(path)) {
 			fs.delete(path, true);
 		}
 	}
 	
-	private void deleteAndRemakeDirectoryInFileSystem(FileSystem fs, Path path) throws IOException{
+	public static void deleteAndRemakeDirectoryInFileSystem(FileSystem fs, Path path) throws IOException{
 		deleteDirectoryInFileSystem(fs, path);
 		fs.mkdirs(path);
 	}
@@ -1007,7 +1008,7 @@ public class Npairsj {
 		}
 
 		service.shutdown();
-
+		
 		for (Future<?> future : futures) {
 			try {
 				future.get();
@@ -1063,6 +1064,8 @@ public class Npairsj {
 		// Copy data to hdfs thatll be require for efficiency testing and for the actual analysis 			
 		FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
 
+		Npairsj.deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs);
+		
 		Path localSetupParams = new Path("setupParams.ser");
 		hdfsFileSystem.copyFromLocalFile(false, localSetupParams, hdfs);
 
@@ -1072,6 +1075,9 @@ public class Npairsj {
 		Path localfullDataAnalysis = new Path("fullDataAnalysis.ser");
 		hdfsFileSystem.copyFromLocalFile(false, localfullDataAnalysis, hdfs);
 
+	    Path dataLoader = new Path("dataLoader.ser");
+	    hdfsFileSystem.copyFromLocalFile(false, dataLoader, hdfs);
+		
 		// Get the list and numberof slaves
 		String[] slaves = getListOfSlaves();
 		int numSlaves = slaves.length;
@@ -1085,28 +1091,31 @@ public class Npairsj {
 		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
 		
 		// Create a path to store the efficincies
-		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
-		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
-		FileUtils.deleteQuietly(new File("efficiencies"));
-		
+//		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
+//		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
+//		FileUtils.deleteQuietly(new File("efficiencies"));
+//		
 		// Create 1 mapper for each slave thats only responsbile for the 0th split
-		for (String slave : slaves) {
-			writeStringToFile("0", slave + "/0");
-		}
+//		for (String slave : slaves) {
+//			writeStringToFile("0", slave + "/0");
+//		}
 		
 		// Copy hadoop input files over to hdfs
-		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
+//		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
 		
 		// Execute efficiency testing
 		System.out.println("Starting efficiency testing...");
-		executeHadoop(slaves);
+//		executeHadoop(slaves);
 		System.out.println("relative efficiencies calculated");
 		
 		// Copy the efficines to the local path
-		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+//		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
 		
 		// Retrieve relative efficiencies
-		HashMap<String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(slaves);
+		HashMap<String, Double> relativeSlaveEfficiencies = new HashMap<String, Double>();// getRelativeSlaveEfficiencies(slaves);
+		relativeSlaveEfficiencies.put("c165", 0.5);
+		relativeSlaveEfficiencies.put("c153", 0.5);
+		
 		
 		// Determine the number of mappers per machine
 		HashMap<String, Integer> mappersPerHost = new HashMap<String, Integer>();
@@ -1196,7 +1205,7 @@ public class Npairsj {
 		executeHadoop(slaves);
 		
 		// Copy output files from hdfs to local
-	    hdfsFileSystem.copyToLocalFile(false, hdfs_out, local);
+	    hdfsFileSystem.copyToLocalFile(true, hdfs_out, local);
 	    
 	    // Use generated results to calculate all the NPAIRS values
 		numSlaves = numMappers;
@@ -1215,9 +1224,12 @@ public class Npairsj {
 				continue;
 			}
 			String j = Test.shortenPath(indexes[i]);
+			System.out.println("HERE");
 			FileInputStream fis = new FileInputStream(
 					"out_npairsj_ser/avgCVScoresTest_" + j);
+			System.out.println("HERE 2");
 			ObjectInputStream ois = new ObjectInputStream(fis);
+			System.out.println("HERE 3");
 
 			try {
 				avgCVScoresTest = avgCVScoresTest.plus((Matrix) ois
