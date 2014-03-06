@@ -1091,31 +1091,30 @@ public class Npairsj {
 		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
 		
 		// Create a path to store the efficincies
-//		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
-//		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
-//		FileUtils.deleteQuietly(new File("efficiencies"));
-//		
+		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
+		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
+		FileUtils.deleteQuietly(new File("efficiencies"));
+		
 		// Create 1 mapper for each slave thats only responsbile for the 0th split
-//		for (String slave : slaves) {
-//			writeStringToFile("0", slave + "/0");
-//		}
+		for (String slave : slaves) {
+			writeStringToFile("0", slave + "/0");
+		}
 		
 		// Copy hadoop input files over to hdfs
-//		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
+		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
 		
 		// Execute efficiency testing
 		System.out.println("Starting efficiency testing...");
-//		executeHadoop(slaves);
+		executeHadoop(slaves);
 		System.out.println("relative efficiencies calculated");
 		
 		// Copy the efficines to the local path
-//		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
 		
 		// Retrieve relative efficiencies
 		HashMap<String, Double> relativeSlaveEfficiencies = new HashMap<String, Double>();// getRelativeSlaveEfficiencies(slaves);
 		relativeSlaveEfficiencies.put("c165", 0.5);
 		relativeSlaveEfficiencies.put("c153", 0.5);
-		
 		
 		// Determine the number of mappers per machine
 		HashMap<String, Integer> mappersPerHost = new HashMap<String, Integer>();
@@ -1157,9 +1156,6 @@ public class Npairsj {
 		
 		// Delete old input files if they exist
 		deleteHadoopInputFiles(slaves);
-
-		// Reseliaze objects
-//		 serializeSerObjects();
 		
 		// Create the hadoop input files for each mapper for each machine using efficinecies and available mappers
 		int currSplit = 0;
@@ -1174,7 +1170,7 @@ public class Npairsj {
 			double samplesPerMapperDouble = (((double) samples) / ((double) mappers));
 			
 			int samplesPerMapper = (int) samplesPerMapperDouble;
-			int missingSamples = (int) ((samplesPerMapperDouble - samplesPerMapper) * mappers);
+			int missingSamples = (int) Math.round((samplesPerMapperDouble - samplesPerMapper) * mappers);
 
 			for (int j = 0; j < mappers; j++) {
 				String outString = currSplit + "";
