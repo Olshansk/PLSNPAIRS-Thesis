@@ -319,6 +319,10 @@ public class Npairsj {
 	// (to e.g. console or log file);
 	// initialized in NpairsjSetupParams.initLogFile()
 
+	// The calculate (p,r) values acquired when NPAIRS is finished running 
+	public double predictability = -1;
+	public double reproducibility = -1;
+	
 	/**************************************************************************************/
 
 	/***************************************************************************************
@@ -391,6 +395,12 @@ public class Npairsj {
 
 		output.printf("%.3f", s);
 		output.println(" s");
+		
+		predictability = getPredictionValue();
+		reproducibility = getReproducibilityValue();
+				
+		System.out.println("Final predictability: " + predictability);
+		System.out.println("Final reproducibility: " + reproducibility);
 
 	}
 
@@ -2218,4 +2228,81 @@ public class Npairsj {
 	//
 	// super.finalize();
 	// }
+	
+	
+	// Determines the reproducibility The results of the reproducibility stats are saved in a file that contains
+	// double values equivalent to the number of splits. All of them can be average
+	// to acquire an overall value for r.
+	private double getPredictionValue() throws IOException {
+		if (!setupParams.cvaRun) {
+			try {
+				throw new Exception ("Why is setupParams.cvaRun false? Does not account for this case.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		}
+		String fileName = setupParams.resultsFilePrefix + ".CVA.SUMM.PP.ppTruePriors";
+		BufferedReader in = new BufferedReader(new FileReader(fileName));
+		String line = in.readLine();
+		// Assumes that first line is of the expected structure		
+		String[] dimensions = line.split(" ");
+//		int maxNTestVols =Integer.parseInt(dimensions[0]);
+		int numSplitHalfs = Integer.parseInt(dimensions[1]);
+		
+		double predictability = 0;
+		
+		for (int i = 0; i < numSplitHalfs; i++) {
+			String[] nums = in.readLine().split(" ");
+			double p = 0;
+			int j;
+			for (j = 0; j < nums.length; j++) {
+				double num = Double.parseDouble(nums[j]);
+				// if the value is -1.0, don't take it into account and average the prob independent of it.
+				// This happens because maxNTestVols is the max among all splithalfs, while not all tests
+				// use all of it.
+				if (num < 0) {
+					break;
+				}
+				p += num;
+			}
+			p = p / ((double) j);
+			predictability += p;
+		}
+		predictability = predictability / ((double) numSplitHalfs);
+		
+		in.close();
+				
+		return predictability;
+	}
+	
+	// The results of the reproducibility stats are saved in a file that contains
+	// double values equivalent to the number of splits. All of them can be average
+	// to acquire an overall value for r.
+	private double getReproducibilityValue() throws IOException {
+		String fileName = setupParams.resultsFilePrefix + ".CVA.SUMM.CC";
+		BufferedReader in = new BufferedReader(new FileReader(fileName));
+		String line = in.readLine();
+		// Assumes that first line is of the expected structure
+		String[] dimensions = line.split(" ");
+//		int numsPerSplit =Integer.parseInt(dimensions[0]);
+		int numSplits = Integer.parseInt(dimensions[1]);
+
+		double reproducibility = 0;
+		for (int i = 0; i < numSplits; i++) {
+			String[] nums = in.readLine().split(" ");
+			
+			double tempReproducibility = 0;
+			for (int j = 0; j < nums.length; j++) {
+				tempReproducibility += Double.parseDouble(nums[j]);
+			}
+			tempReproducibility = tempReproducibility / ((double) nums.length);
+			reproducibility += tempReproducibility;
+		}
+		reproducibility = reproducibility / ((double) numSplits);
+		
+		in.close();
+		
+		return reproducibility;
+	}
 }

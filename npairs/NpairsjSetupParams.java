@@ -472,6 +472,10 @@ public class NpairsjSetupParams implements Serializable{
 		try {
 			npairsSetupParamStruct = (MLStructure)new NewMatFileReader(paramMatFilename).
 				getContent().get("npairs_setup_info");
+			
+//			npairsSetupParamStruct.setField("num_splits", new MLDouble("num_splits", new double[][]{{1}}));
+
+			
 		} 
 		catch (Exception e) {
 			throw new IOException("NPAIRS analysis setup file " + 
