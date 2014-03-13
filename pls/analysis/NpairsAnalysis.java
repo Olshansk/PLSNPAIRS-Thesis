@@ -84,7 +84,9 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		
 		progress.startTask(setupFileIDMessage, "All tasks");
 		
-		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked);
+		for (double fraction = 0.1; fraction <= 1; fraction += 0.1) {
+		
+		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked, fraction);
 		
 		File nspFileField = new File(nsp.resultsFilePrefix.trim());
 		File resultsDir = nspFileField.getParentFile();
@@ -357,12 +359,14 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 					progress.postMessage("\n" + stopAnalysesMsg + "\n");
 					Npairsj.output.println(stopAnalysesMsg);
 				}				
-			}	
+			}
+			
 			long end=System.currentTimeMillis();
 			System.out.println("THE ANALYSIS TIME IS"+(end-start)/1000+" seconds ********************");
 			
 			//Alan
 			System.gc();
+		}
 		}
 		progress.endTask();
 		progress.complete();

@@ -496,6 +496,42 @@ public class NpairsjSetupParams implements Serializable{
 
 	}
 
+	public NpairsjSetupParams(String paramMatFilename, boolean eventRelAnalysis, double fraction) throws NpairsjException, IOException {
+
+		//		Npairsj.output.println("Reading NPAIRS analysis setup file " + paramMatFilename + "...");
+
+		try {
+			npairsSetupParamStruct = (MLStructure)new NewMatFileReader(paramMatFilename).getContent().get("npairs_setup_info");
+			
+			int oldNumSplits = ((MLDouble)npairsSetupParamStruct.getField("num_splits")).get(0,0).intValue();
+			int newNumSplits = (int)(((double)oldNumSplits)*fraction);
+ 			
+			System.out.println("Original num splits: " + oldNumSplits);
+			System.out.println("Fraction: " + fraction);
+			System.out.println("New num splits: " + newNumSplits);
+			
+			npairsSetupParamStruct.setField("num_splits", new MLDouble("num_splits", new double[][]{{newNumSplits}}));
+
+		} 
+		catch (Exception e) {
+			throw new IOException("NPAIRS analysis setup file " + 
+					paramMatFilename + " could not be loaded.");
+		}
+
+		this.loadDatamats = eventRelAnalysis;
+
+		setSaveResultsInfo();
+
+		setSessionFileInfo();
+
+		setResamplingInfo();
+
+		setInitFeatSelInfo();
+
+		setAnalysisModelInfo();
+
+	}
+	
 	/** Initializes log file.
 	 * 
 	 * @param evdOnly if true, log file has suffix .EVD.log
