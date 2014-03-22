@@ -102,7 +102,7 @@ public class PCAPlsVsNpairs {
 		Matrix npairsImgMat = new MatrixImpl(npairsImgs.getArray(), "COLT").getMatrix();
 		System.out.println("Size of npairs img mat Matrix being fed into PCA: " + 
 				npairsImgMat.numRows() + " X " + npairsImgMat.numCols());
-		PCA npairsPCA = new PCA(npairsImgMat.transpose(), false, false);
+		PCA npairsPCA = new PCA(npairsImgMat.transpose(), false, false, null);
 		Matrix npairsPCAEvects = npairsPCA.getEvects();
 		System.out.println("Size npairs PCA evects Matrix: " + 
 				npairsPCAEvects.numRows() + " X " + npairsPCAEvects.numCols());
@@ -165,7 +165,7 @@ public class PCAPlsVsNpairs {
 					"for Lag # " + i + ": " + currLagLVs.numRows() + " X " +
 					currLagLVs.numCols());
 			// Do PCA separately for each lag
-			PCA plsPCA = new PCA(currLagLVs.transpose(), false, false);
+			PCA plsPCA = new PCA(currLagLVs.transpose(), false, false, null);
 			Matrix PCAEvects = plsPCA.getEvects();
 			System.out.println("Size pls PCA evects Matrix: " + 
 					PCAEvects.numRows() + " X " + PCAEvects.numCols());
@@ -216,7 +216,7 @@ public class PCAPlsVsNpairs {
 				" X " + reArrangedPLSImgsAllLags.numCols());
 		
 		System.out.println("Doing PCA on all PLS lags at once...");
-		PCA allLagPLSPCA = new PCA(reArrangedPLSImgsAllLags.transpose(), false, false);
+		PCA allLagPLSPCA = new PCA(reArrangedPLSImgsAllLags.transpose(), false, false, null);
 		System.out.println("Done all-lag PCA.");
 		Matrix allLagPCAEvects = allLagPLSPCA.getEvects();
 		System.out.println("Size pls all-lag PCA evects Matrix: " + 

@@ -2,6 +2,8 @@ package npairs.utils;
 
 import java.io.Serializable;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.io.PrintStream;
 
 import npairs.io.NpairsDataLoader;
 import npairs.shared.matlib.*;
@@ -12,26 +14,78 @@ import npairs.Npairsj;
 import npairs.NpairsjException;
 import npairs.NpairsjSetupParams;
 
-/** Runs PCA on input matlib.Matrix M via EigenvalueDecomposition.
+/** Performs Principal Component Analysis (PCA).
  * 
- * PCA(M) = Eigenvalue decomposition of covariance matrix 
- * of M (i.e., evd(covmat) = V(S^2)Vt, where S^2 is
- * diagonal eigenvalue matrix and covmat = MtM/M.numRows() (after mean-centring M)
- * Note that input M is NOT modified, though, when mean-centring. 
- * (eval = squared singular value lambda in S matrix of SVD(M) = USVt)
+ * <p>PCA produces a representation of input data as a linear combination of orthonormal
+ * components. Each component accounts for as much variance as possible uncorrelated with 
+ * the other components: the 1st component accounts for the maximum amount of variance
+ * that can be expressed in a single dimension; the 2nd component accounts for the maximum amount
+ * of variance uncorrelated with the 1st component, etc. This means that for any given number 
+ * <i>k</i> <= <i>d</i> (where <i>d</i> is total # of PC dimensions), the most information 
+ * is preserved if the data is expressed via linear combinations of the first <i>k</i> PCs; i.e., 
+ * the PCs serve as basis vectors for a minimally lossy representation of the data. 
  * 
- * given M is m X n,
- * V = PCA eigenvectors (n evects length n in columns of V)
- * S = n X n diagonal matrix containing PCA eigenvalues down diagonal  
- * PC Scores = projection of (mean-centred) original input data 
- * onto PCA eigenvectors V = representation of data in PCA basis
+ * <p>In NPAIRS, PCA is used as a "denoising" and dimension reduction step before data is 
+ * passed into a CVA analysis. 
  * 
- * @author anita
- * @version 1.0
+ * <h4>The Algorithm</h4>
+ * <p>This class uses Eigenvalue Decomposition (EVD) to do PCA.
+ * <ul>
+ * <li>Let <b>M</b> be a matrix of data with <i>m</i> rows (observations) and <i>n</i> columns (variables).
+ * <li> Let <i>d</i> = minimum of <i>m</i>, <i>n</i>.
+ * </ul>
+ * Then PCA of <b>M</b> is accomplished via EVD of the covariance matrix of <b>M</b>:
+ * <ul>
+ * <li>cov(<b>M</b>) = <b>V&#923;<sup>2</sup>V</b><sup>t</sup>, where 
+ * <p>
+ * <ul>
+ * 	 <li>cov(<b>M</b>) = (<b>M</b> - <b>&#956;</b>)<sup>t</sup>(<b>M</b> - <b>&#956;</b>)/(<i>m</i> - 1)
+ * 			(where <b>&#956;</b> is matrix containing sample mean vector in each row),
+ * 	 <p>
+ *	 <li><b>&#923;<sup>2</sup></b> is a diagonal <i>d</i> X <i>d</i> matrix of PC eigenvalues in descending order, and
+ *   <p>
+     <li><b>V</b> is an  <i>n</i> X <i>d</i> matrix of PC eigenvectors (in columns).
+ * </ul>
+ * </ul>
+ * 
+ * <p>Eigenvalue <i>&#955;<sub>i</sub></i> = amount of variance accounted for by <i>i<sup>th</sup></i> PC
+ * component (eigenvector). If the <i>n</i> input variables are not linearly independent (always the case if 
+ * <i>m</i> < <i>n</i>), then only the first <i>p</i> eigenvalues in <b>&#923;<sup>2</sup></b> 
+ * will be non-zero, where <i>p</i> is the actual number of linearly independent input variables (i.e.,
+ * <i>p</i> = rank of input data matrix).
+ * 
+ * <p>PC scores <b>P</b> are coefficients of mean-centred input data expressed as a linear combination
+ * 		of <i>q</i> <= <i>d</i>  PC eigenvectors:
+ * 			<ul>
+ * 				<li>(<b>M</b> - <b>&#956;</b>)<sub><i>m X n</i></sub> &#8776; <b>P</b><sub><i>m X q</i></sub>  
+ * 					<b>V</b><sup>t</sup><sub><i>q X n</i></sub> 
+ * 				<p>If <i>q</i> = <i>p</i> then the equality is exact. 
+ * 				</ul>
+ * 
+ * 			
+ * In other words, <b>V</b><sup>t</sup> can be viewed as a linear transformation 
+ * of mean-centred data into PC space.
+ * <ul>
+ * <li><b>P</b><sup>t</sup><sub><i>q X m</i></sub> = <b>V</b><sup>t</sup><sub><i>q X n</i></sub>
+ * 		(<b>M</b> - <b>&#956;</b>)<sup>t</sup><sub><i>n X m</i></sub> 
+ * </ul>
+ * 
+ * @author Anita Oder
  * 
  */
-public class PCA implements Serializable{
-	
+
+public class PCA implements Serializable {
+
+	  /**
+	   * @Author Reza JNI Functions Declaration
+	   */
+
+	  public native void runTest(double[] din, long nRow, long nCol,
+	      double[] PCA_score, double[] EVec, double[] Eval);
+	  public native boolean checkGPU();
+
+  static public boolean isGpuAvailable = false;
+
 //		private boolean normalizeBySD = false; // if true, PC Scores are normalized by
 //											   // their standard deviations
 //		                                       // to have variance 1.
@@ -42,27 +96,103 @@ public class PCA implements Serializable{
 		private Matrix evalMat;       // diagonal Matrix containing eigenvalues down main diagonal
 //		private Matrix covMat; // for debugging
 		private Matrix pcScores; // projection of original data onto PC eigenvectors
-		                         // (pcScores = MV)
-		private static int count = 0;
-		
+		                         // (pcScores = MV)		
 		private boolean pcaInOrigSpace; // Usually do PCA on feature-selected data, in which
 		                                // case PCA will
 		                                // not be in orig space unless explicitly projected back
 		                                // into it.  
+		private PrintStream logStream = null; // where to log info; null if no logging to be done
 		
 		
-	// Constructor
-	public PCA(Matrix M, boolean normalizePCsBySD, boolean inputDataInOrigSpace) {
+	/** Constructor for PCA object. Calculates PCA of input Matrix via eigenvalue decomposition.
+	 * 
+	 * @param M
+	 * 			<p>Matrix of data. 
+	 * 			<p>Assumption: rows are observations, columns are variables.
+	 * @param normalizePCsBySD
+	 * 			<p>If true, normalize PC scores to have variance 
+	 * 			1 for each PC dimension by dividing them by their standard deviation over the 
+	 * 			dimension.
+	 * @param inputDataInOrigSpace
+	 * 			<p>If true, input data lives in original 'image' (voxel) space instead of having
+	 * 			been transformed into a feature selection (i.e., reduced dimension) space.
+	 * @param logStream
+	 * 			<p>Where to log info. Set to null if no info is to be logged.
+	 * @throws UnknownHostException 
+	 */
+	public static boolean DEBUG_ali=false; 
+	public PCA(Matrix M, boolean normalizePCsBySD, boolean inputDataInOrigSpace, 
+			PrintStream logStream)  {
+		if (logStream != null) {
+			this.logStream = logStream;
+		}
+	    /**
+	     * @author reza
+	     * 
+	     */
+		/* Total memory currently in use by the JVM */
+		if (DEBUG_ali) {
+				System.out.println("PCA Constructor:: Total memory (Mbytes): " +
+						(long)(Runtime.getRuntime().totalMemory())/1000000);
+		}
+	    		
+	    
+	    
+
+
+	   // StackTraceElement[] cause = new Exception().getStackTrace();
+		/*StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+
+	    System.out.println("stack:"+elements[elements.length-1]);
+	    for (int i = 0; i < elements.length; i++) {
+			System.out.println(elements[i]);
+		}
+	    */
+	    isGpuAvailable=false;
+	    //isGpuAvailable = this.checkGPU();
+	    
+	    try {
+		
+			    String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+			    if (DEBUG_ali) {
+			    	System.out.println("running on"+localhostname);
+			    }
+			    if (localhostname.toLowerCase().contains("gpu")){
+        System.loadLibrary("jbrain");
+			    	isGpuAvailable=true;
+			    }
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 //		double startTime = System.currentTimeMillis();
 		pcaInOrigSpace = inputDataInOrigSpace;
 		computePCA(M, normalizePCsBySD);
 //		double totTime = (System.currentTimeMillis() - startTime) / 1000;
 //		if (debug) {
-//			Npairsj.output.println("Total time PCA: " + totTime + " s");
+//			logStream.println("Total time PCA: " + totTime + " s");
 //		}
 	}
 	
+	/** Constructor for PCA object. Initializes PCA results. 
+	 * 
+	 */
+	private PCA(Matrix eigenvectors, double[] eigenvalues, Matrix pcScores, boolean pcaInOrigSpace) {
+		this.eigenvectors = eigenvectors;
+		this.eigenvalues = eigenvalues;
+		this.evalMat = new MatrixImpl(eigenvalues.length, eigenvalues.length).getMatrix();
+		try {
+			evalMat.setDiag(eigenvalues);
+		}
+		catch (MatrixException me) { 
+			// matrix is square by construction
+		}
+		this.pcScores = pcScores;	
+		this.pcaInOrigSpace = pcaInOrigSpace;
+	}
 	
+	static int counter =0;
 	/** Calculates PCA of input Matrix M via eigenvalue decomposition
 	 * 
 	 * @param M - Matrix of doubles. 
@@ -70,73 +200,138 @@ public class PCA implements Serializable{
 	 * @param normalizeBySD TODO
 	 */
 	private void computePCA(Matrix M, boolean normalizeBySD) {
-		++count;
+		
+	      
+		counter+=1;
 		int nRows = M.numRows();
 		int nCols = M.numCols();
 		
-		double sTime = System.currentTimeMillis();
-		Matrix meanCentredM = M.meanCentreColumns();	// M is NOT modified
-		double tTime = (System.currentTimeMillis() - sTime) / 1000;
-		if (debug) {
-			Npairsj.output.println("\tTime mean-centring PCA input data: " + tTime + " s");
-		}
 		
-		if (nRows < nCols) {
-			sTime = System.currentTimeMillis();
-			Matrix sspMMt = meanCentredM.sspByRow();
+		
+	    double sTime, tTime;
+
+	    /*
+	     * Runtime runtime = Runtime.getRuntime();
+	     * 
+	     * System.out.println("used mem:" + (runtime.totalMemory() -
+	     * runtime.freeMemory()));
+	     */
+	    if (isGpuAvailable) {
+	    	if (DEBUG_ali) {
+	    		System.out.println(counter+"\tif (isGpuAvailable) : Total memory (Mbytes): " + 
+	    			    		(long)(Runtime.getRuntime().totalMemory())/1000000);
+	    	}
+	    	
+	      double[] pca_temp = new double[nRows * nCols];
+	      double[] evec_temp = new double[nCols * nCols];
+	      
+	      
+	      
+	      pcScores = Matrix.createMatrix(nRows, nCols);
+	      
+	      eigenvectors = Matrix.createMatrix(nCols, nCols);
+	      eigenvalues = new double[nCols];
+
+	      
+
+
+	      
+	      this.runTest(M.toRowPacked1DArray(), nRows, nCols, pca_temp, evec_temp,
+	          eigenvalues);
+
+	     
+
+	      for (int i = 0; i < nRows; i++)
+	        for (int j = 0; j < nCols; j++)
+          pcScores.set(i, j, pca_temp[j * nCols + i]);
+
+	      for (int i = 0; i < nCols; i++)
+	        for (int j = 0; j < nCols; j++)
+          eigenvectors.set(i, j, evec_temp[j * nCols + i]);
+	      
+	      //ToDo: Ali:: SetColumn
+	      
+	      
+	      pca_temp=null;
+	      evec_temp=null;
+	      
+	      
+	      
+	      
+	      if (DEBUG_ali) {
+	    	  System.out.println(counter+"\tENDif (isGpuAvailable) : Total memory (MBytes): " + 
+	      			        (long)(Runtime.getRuntime().totalMemory())/1000000);
+	      }	
+	    }//end of GPU if
+	    
+
+	    else {
+	    
+		    sTime = System.currentTimeMillis();
+			Matrix meanCentredM = M.meanCentreColumns();	// M is NOT modified
 			tTime = (System.currentTimeMillis() - sTime) / 1000;
 			if (debug) {
-				Npairsj.output.println("\tTime SSP of mean-centred input PCA data: " + tTime + " s");
+				logStream.println("\tTime mean-centring PCA input data: " + tTime + " s");
 			}
 			
-			sTime = System.currentTimeMillis();
-			EigenvalueDecomposition evd = sspMMt.eigenvalueDecomposition();
-			tTime = (System.currentTimeMillis() - sTime) / 1000;
-			if (debug) {
-				Npairsj.output.println("\tTime EVD of SSP in PCA: " + tTime + " s");
+			if (nRows < nCols) {
+				sTime = System.currentTimeMillis();
+				Matrix sspMMt = meanCentredM.sspByRow();
+				tTime = (System.currentTimeMillis() - sTime) / 1000;
+				if (debug) {
+					logStream.println("\tTime SSP of mean-centred input PCA data: " + tTime + " s");
+				}
+				
+				sTime = System.currentTimeMillis();
+				EigenvalueDecomposition evd = sspMMt.eigenvalueDecomposition();
+				tTime = (System.currentTimeMillis() - sTime) / 1000;
+				if (debug) {
+					logStream.println("\tTime EVD of SSP in PCA: " + tTime + " s");
+				}
+				
+				Matrix leftEigenvects = evd.getEvects(); // = U given MMt = US^2Ut
+				Matrix invSqrtEvalMat = evd.getInvSqrtRealEvalMat();
+				sTime = System.currentTimeMillis();
+				eigenvectors = (meanCentredM.transpose()).mult(leftEigenvects.mult(invSqrtEvalMat));
+				tTime = (System.currentTimeMillis() - sTime) / 1000;
+				if (debug) {	
+					logStream.println("\tTime calculating PCA eigenvectors: " + tTime + "s");
+				}
+				// eigenvalues are scaled because evd was done on ssp matrix, 
+				// not (sample) covariance matrix
+				eigenvalues = scale(evd.getRealEvals(), 1./(double)(nRows - 1));
 			}
 			
-			Matrix leftEigenvects = evd.getEvects(); // = U given MMt = US^2Ut
-			Matrix invSqrtEvalMat = evd.getInvSqrtRealEvalMat();
+			else {
+				sTime = System.currentTimeMillis();
+				Matrix sspMtM = meanCentredM.sspByCol();
+				tTime = (System.currentTimeMillis() - sTime) / 1000;
+				if (debug) {
+					logStream.println("\tTime SSP of mean-centred input PCA data: " + tTime + " s");
+	//				String saveName = "RRSD_tests/javaTest/pcaSSPMtMMat.debug." + count;
+	//				sspMtM.printToFile(saveName, "IDL");
+				}
+				sTime = System.currentTimeMillis();
+				EigenvalueDecomposition evd = sspMtM.eigenvalueDecomposition();
+				tTime = (System.currentTimeMillis() - sTime) / 1000;
+				if (debug) {
+					logStream.println("\tTime EVD of SSP in PCA: " + tTime + " s");
+				}
+				eigenvectors = evd.getEvects(); // == V given MtM = VS^2Vt
+	            // eigenvalues are scaled because evd was done on ssp matrix, 
+				// not (sample) covariance matrix
+				eigenvalues = scale(evd.getRealEvals(), 1./(double)(nRows - 1));
+			}		
+	    
+			// TODO: optimize calc. of pc scores.
 			sTime = System.currentTimeMillis();
-			eigenvectors = (meanCentredM.transpose()).mult(leftEigenvects.mult(invSqrtEvalMat));
-			tTime = (System.currentTimeMillis() - sTime) / 1000;
-			if (debug) {	
-				Npairsj.output.println("\tTime calculating PCA eigenvectors: " + tTime + "s");
-			}
-			// eigenvalues are scaled because evd was done on ssp matrix, 
-			// not (sample) covariance matrix
-			eigenvalues = scale(evd.getRealEvals(), 1./(double)(nRows - 1));
-		}
-		
-		else {
-			sTime = System.currentTimeMillis();
-			Matrix sspMtM = meanCentredM.sspByCol();
+			pcScores = meanCentredM.mult(eigenvectors);
 			tTime = (System.currentTimeMillis() - sTime) / 1000;
 			if (debug) {
-				Npairsj.output.println("\tTime SSP of mean-centred input PCA data: " + tTime + " s");
-//				String saveName = "RRSD_tests/javaTest/pcaSSPMtMMat.debug." + count;
-//				sspMtM.printToFile(saveName, "IDL");
+				logStream.println("\tTime calculating PC scores: " + tTime + " s");
 			}
-			sTime = System.currentTimeMillis();
-			EigenvalueDecomposition evd = sspMtM.eigenvalueDecomposition();
-			tTime = (System.currentTimeMillis() - sTime) / 1000;
-			if (debug) {
-				Npairsj.output.println("\tTime EVD of SSP in PCA: " + tTime + " s");
-			}
-			eigenvectors = evd.getEvects(); // == V given MtM = VS^2Vt
-            // eigenvalues are scaled because evd was done on ssp matrix, 
-			// not (sample) covariance matrix
-			eigenvalues = scale(evd.getRealEvals(), 1./(double)(nRows - 1));
-		}		
-		
-		// TODO: optimize calc. of pc scores.
-		sTime = System.currentTimeMillis();
-		pcScores = meanCentredM.mult(eigenvectors);
-		tTime = (System.currentTimeMillis() - sTime) / 1000;
-		if (debug) {
-			Npairsj.output.println("\tTime calculating PC scores: " + tTime + " s");
-		}
+	    }// end of else (computing on CPU)
+	    
 		if (normalizeBySD) {
 			sTime = System.currentTimeMillis();
 			// normalize each pcScore column (dim) to have variance 1
@@ -149,7 +344,7 @@ public class PCA implements Serializable{
 			}
 			if (debug) {
 				tTime = (System.currentTimeMillis() - sTime) / 1000;
-				Npairsj.output.println("\tTotal time normalizing PC scores: " + tTime + " s");
+				logStream.println("\tTotal time normalizing PC scores: " + tTime + " s");
 			}
 		}
 		evalMat = new MatrixImpl(eigenvalues.length, eigenvalues.length).getMatrix();
@@ -161,39 +356,114 @@ public class PCA implements Serializable{
 		}
 	}
 	
-	
+	/** Returns Matrix <b>V</b> of PC eigenvectors.
+	 * 
+	 * @return PC eigenvectors
+	 * 		<ul> <li> Matrix dimensions: <i>n</i> X <i>d</i>, where 
+	 * 			<p><i>n</i> = # columns (variables) in input data 
+	 *          <p><i>d</i> = # PC dimensions (i.e., minimum of <i>m</i> ( = # rows in 
+	 *          input data) and <i>n</i>).
+	 *          <li><i>i<sup>th</sup></i> column contains eigenvector corresponding to 
+	 *          <i>i<sup>th</sup></i> PC dimension.
+	 * 		</ul>
+	 * 
+	 * @see getEvects(int[])
+	 * @see getEvals()
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
+	 */
 	public Matrix getEvects() {
 		return eigenvectors;
 	}
 	
+	/** Returns Matrix of PC eigenvectors corresponding to 
+	 * 	given PC dimensions only.
+	 * 
+	 * @param pcDims array containing PC dimensions (0-relative) to include in 
+	 * 			returned eigenvector Matrix
+	 * @return PC eigenvectors for given PC dimensions
+	 * 		<ul> <li> Matrix dimensions: <i>n</i> X <i>k</i>, where 
+	 * 				<p><i>n</i> = # of columns (variables) in input data
+	 * 				<p><i>k</i> = # of elements in given pcDims array
+	 * 
+	 * 		</ul>
+	 * @see getEvects()
+	 * @see getEvals()
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
+	 */
 	public Matrix getEvects(int[] pcDims) {
 		return eigenvectors.subMatrixCols(pcDims);
 	}
 	
+	/** Returns PC eigenvalues.
+	 * 
+	 * @return Array containing eigenvalues in descending order.
+	 * 		<ul>
+	 * 		<li>Array length = # PC dimensions (eigenvectors).
+	 *      <li><i>i<sup>th</sup></i> eigenvalue <i>&#955;<sub>i</sub></i>
+	 *      	= variance of <i>i<sup>th</sup></i> PC eigenvector.
+	 *      </ul>
+	 * 
+	 * @see getEvects()
+	 * @see getEvalMat()
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
+	 *
+	 */
 	public double[] getEvals() {
 		return eigenvalues;
 	}
 	
+	/** Returns diagonal Matrix <b>&#923;<sup>2</sup></b> containing PC eigenvalues.
+	 * 
+	 * @return Square Matrix containing PC eigenvalues in descending order down the main diagonal.
+	 *         <ul><li>Matrix size: <i>d</i> X <i>d</i>, where 
+	 *         <p><i>d</i> = # PC dimensions (eigenvectors).
+	 *         </ul>
+	 * @see getEvects()
+	 * @see getEvals()
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
+	 */
 	public Matrix getEvalMat() {
 		return evalMat;		
 	}
 	
-	/** Returns representation of original data in PC space (i.e., projection
-	 *  of original (mean-centred) data onto eigenvectors).  
-	 * @return PC Scores, i.e. projection of original data onto PC eigenvectors 
+	/** Returns representation of original data transformed into PC space, i.e.: 
+	 * <ul><li>Matrix of coefficients corresponding to weights of PC components
+	 * when input data is expressed as linear combination of PC components.
+	 * </ul>  
+	 * @return PC scores
+	 * <ul> 
+	 * 		<li>Matrix size: <i>m</i> X <i>d</i>, where      
+	 *      <p><i>m</i> = # rows (observations) in input data
+	 *      <p><i>d</i> = # PC dimensions (eigenvectors).
+	 * </ul>
+	 * @see getEvects()
+	 * @see getPCScores(int[])
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
 	 */
 	public Matrix getPCScores() {
 		return pcScores;		
 	}
 	
 	
-	/** Returns representation of original data in PC space (i.e., projection
-	 * of original (mean-centred) data onto eigenvectors).  Only returns the PC dimensions specified
-	 * in input array of PC eigenvector indices-- e.g., if input array is {0,1,4,5},
-	 * returns first, second, fifth and sixth PC dims.
-	 * @return PC scores, i.e. projection of original data onto subset of 
-	 * 			PC eigenvectors
+	/** Returns PC scores corresponding to PC dimensions specified in input 
+	 * array.
+	 * @param pcDims 
+	 * 			Array of indices (0-relative) indicating which PC dimensions to include.
+	 * 			<p> E.g., if input array is {0,1,4,5}, returns 
+	 * 			scores for 1st, 2nd, 5th and 6th PC dimensions.
+	 * 
+	 * @return PC scores
+	 * <ul> 
+	 * 		<li>Matrix size: <i>m</i> X <i>k</i>, where
+	 * 		<p><i>m</i> = # rows (observations) in input data
+	 *      <p><i>k</i> = # of elements in given pcDims array
+	 * </ul>
+	 * 
+	 * @see getPCScores()
+	 * @see getEvects()
+	 * @see rotateEigimsToOrigSpace(int[], Matrix, Matrix)
 	 */
+	
 	public Matrix getPCScores(int[] pcDims) {
 		return pcScores.subMatrixCols(pcDims);
 	}
@@ -207,6 +477,24 @@ public class PCA implements Serializable{
 //		eigenvectors = newEvects;
 //	}
 	
+	/** Indicates whether PCA results live in the same space as original data 
+	 * before any transformations - i.e., whether PCA eigenvectors
+	 * are represented in terms of original data variables (e.g., voxels). If original
+	 * data consists of images, PC eigenvectors in original space may be considered
+	 * 'eigenimages'.
+	 * 
+	 * @return 
+	 * 		<p> <code>true</code> if PC eigenvectors are represented in original space
+	 * 		<ol>This may happen in 2 cases:
+	 * 			<li>Data used as PCA input lives in original space;
+	 * 			<li>Data used in PCA lives in some other space but PC eigenvectors have 
+	 * 				been transformed back to original space after PCA calculation.			
+	 * 		</ol>
+	 * 
+	 * 		<p> <code>false</code> if PCA input data has been previously transformed into a 
+	 * 				different (typically dimension-reduced) space and no rotation back into original
+	 * 				space has been performed on PC eigenvectors after calculation.
+	 */
 	public boolean pcaInOrigSpace() {
 		return pcaInOrigSpace;
 		

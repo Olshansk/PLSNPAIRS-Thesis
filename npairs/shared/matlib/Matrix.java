@@ -861,5 +861,77 @@ public abstract class Matrix implements Serializable{
 		return dProd;
 	}
 	
+
+	/** Use this method if MatrixType has already been initialized by previous
+	 * call to {@link #createMatrix(int, int, MatrixType) createMatrix (int, int, MatrixType)}.
+	 * 
+	 * @param nRows
+	 * 		<p> # rows in Matrix
+	 * @param nCols
+	 * 		<p> # columns in Matrix
+	 * 
+	 * @return new Matrix of given size and type 
+	 */
+	public static Matrix createMatrix(int nRows, int nCols)  {
+		return new MatrixImpl(nRows, nCols).getMatrix();
+	}
+	
+	/** 
+	 * 
+	 * @param nRows
+	 * 		<p> # rows in Matrix
+	 * @param nCols
+	 * 		<p> # columns in Matrix
+	 * @param m
+	 * 	    <p> Concrete Matrix type. May be one of:
+	 * 			<ul>
+	 * 			<li> MatrixType.COLT
+	 * 			<li> MatrixType.PARALLELCOLT
+	 * 		    <li> MatrixType.PARALLELCOLTFLOAT
+	 * 			<li> MatrixType.MATLAB
+	 *          </ul>
+	 * @return new Matrix of given size and type 
+	 * @throws MatrixException if Matrix type is invalid
+	 */
+	public static Matrix createMatrix(int nRows, int nCols, MatrixType m) throws MatrixException {
+		return new MatrixImpl(nRows, nCols, m).getMatrix();
+	}
+	
+	/**
+	 * 
+	 * @param contents
+	 * 		<p> 2D array containing elements of Matrix 
+	 * @return new Matrix with given contents; same size as input array
+	 */
+	public static Matrix createMatrix(double[][] contents) {
+		return new MatrixImpl(contents).getMatrix();
+	}
+	
+	/**
+	 * 
+	 * @param contents
+	 * 		<p> 2D array containing elements of Matrix 
+	 * @param m
+	 * 		<p> Concrete Matrix type. May be one of:
+	 * 			<ul>
+	 * 			<li> MatrixType.COLT
+	 * 			<li> MatrixType.PARALLELCOLT
+	 * 		    <li> MatrixType.PARALLELCOLTFLOAT
+	 * 			<li> MatrixType.MATLAB
+	 *          </ul>
+	 * @return new Matrix of given type with given contents; same size as input array
+	 * @throws MatrixException if Matrix type is invalid
+	 */
+	public static Matrix createMatrix(double[][] contents, MatrixType m) throws MatrixException {
+		return new MatrixImpl(contents, m).getMatrix();
+	}
+	
+	/** Matrix libraries for which concrete Matrix classes exist.
+	 *
+	 */
+	public enum MatrixType {
+		COLT, PARALLELCOLT, PARALLELCOLTFLOAT, MATLAB
+	}
+	
 }
 

@@ -129,7 +129,7 @@ public class Analysis implements Serializable{
 			
 			double sTime = System.currentTimeMillis();
 			Npairsj.output.println("Running PCA... ");
-			currPCA = new PCA(data, setupParams.normalizePCsBySD, !setupParams.initFeatSelect);
+			currPCA = new PCA(data, setupParams.normalizePCsBySD, !setupParams.initFeatSelect, null	);
 			double tTime = (System.currentTimeMillis() - sTime) / 1000;
 			Npairsj.output.println("Total time PCA: [" + tTime + " s]");
 			

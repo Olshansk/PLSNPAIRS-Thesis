@@ -1,6 +1,6 @@
 package npairs.shared.matlib;
 
-import jmatlink.*;
+import npairs.shared.matlib.Matrix.MatrixType;
 
 /** This class implements a concrete instance of the abstract type Matrix.  
  *  Which concrete Matrix class is used depends on the underlying matrix library
@@ -30,11 +30,9 @@ public class MatrixImpl {
 	private Matrix mat;
 	//protected static JMatLink matlabEngine;
 	//private static int currNumMatlabMatImplInstances = 0;
-	
-	//Alan: private static String matlibType; // TODO: should be synchronized or protected in some other way?
-	
 	private static String matlibType = "PARALLELCOLT"; // TODO: should be synchronized or protected in some other way?
 	
+	private static MatrixType matlibTypeEnum;
 	
 	/** Constructs new instance of MatrixImpl.
 	 * 
@@ -138,6 +136,8 @@ public class MatrixImpl {
 	 * 
 	 */
 	public MatrixImpl(double[][] contents) {
+//		this(contents, matlibTypeEnum);
+//	}
 		if (matlibType.toUpperCase().equals("COLT")) {
 			mat = new ColtMatrix(contents);
 		}
@@ -163,6 +163,7 @@ public class MatrixImpl {
 	}
 	
 	
+	
 	/** Constructs new instance of MatrixImpl.  
 	 *  REQUIRED: matlibType has been initialized already. 
 	 * 
@@ -179,10 +180,9 @@ public class MatrixImpl {
 	 * 
 	 */
 	public MatrixImpl (int nrows, int ncols) {
+//		this(nrows, ncols, matlibTypeEnum);
+//	}
 	
-		mat = new ParallelColtDoubleMatrix(nrows, ncols);
-		
-		/*
 		if (matlibType.toUpperCase().equals("COLT")) {
 			mat = new ColtMatrix(nrows, ncols);
 		}
@@ -205,9 +205,34 @@ public class MatrixImpl {
 			mat = new MatlabMatrix(nrows, ncols);
 		}
 		// else throws NullPointerException if matlibType not initialized already
-		 * 
-		 */
-
+	}
+	
+	public MatrixImpl (int nrows, int ncols, MatrixType m) {
+		matlibTypeEnum = m;
+		switch (m) {
+		case COLT: 
+			mat = new ColtMatrix(nrows, ncols);
+		case PARALLELCOLT:
+			mat = new ParallelColtDoubleMatrix(nrows, ncols);
+		case PARALLELCOLTFLOAT:
+			mat = new ParallelColtFloatMatrix(nrows, ncols);
+		case MATLAB:
+			mat = new MatlabMatrix(nrows, ncols);
+		}
+	}
+	
+	public MatrixImpl (double[][] contents, MatrixType m) {
+		matlibTypeEnum = m;
+		switch (m) {
+		case COLT: 
+			mat = new ColtMatrix(contents);
+		case PARALLELCOLT:
+			mat = new ParallelColtDoubleMatrix(contents);
+		case PARALLELCOLTFLOAT:
+			mat = new ParallelColtFloatMatrix(contents);
+		case MATLAB:
+			mat = new MatlabMatrix(contents);
+		}
 	}
 	
 	
@@ -219,6 +244,9 @@ public class MatrixImpl {
 		return mat;
 	}
 	
+	public static String getMatlibType() {
+		return matlibType;
+	}
 	
 //	public static void setMatlibType(String matlibType) {
 //		MatrixImpl.matlibType = matlibType;
