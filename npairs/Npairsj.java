@@ -954,8 +954,7 @@ public class Npairsj {
 
 		System.out.println("starting to serialized splits object");
 		try {
-			ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
-					"splits.ser"));
+			ObjectOutput out = new ObjectOutputStream(new FileOutputStream("splits.ser"));
 			out.writeObject(splits);
 			out.close();
 		} catch (IOException ex) {
@@ -1030,11 +1029,29 @@ public class Npairsj {
 		}
 	}
 	
+	// Assumes that if the file exists, then it contains good data
+	private boolean checkIfSlaveEfficienciesAvailable(String [] slaves) {
+		File dir = new File("efficiencies");
+		for (File child : dir.listFiles()) {
+			try {
+				BufferedReader in = new BufferedReader(new FileReader(child));
+				in.close();
+			} catch(FileNotFoundException e) {
+				//if child does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
+				return false; 
+			} catch (IOException e) {
+				return false;
+			}
+			
+		}
+		return true;
+	}
+	
 	private void runSplitAnalyses() throws IOException, NpairsjException {
 		int numSamples = splits[0].length; // numSamples ==
 											// min(setupParams.numSplits, max
 											// num splits)
-		output.println("No. splits: " + numSamples);
+		System.out.println("No. splits: " + numSamples);
 
 		int totalNumSplitAnalyses = numSamples;
 		if (setupParams.switchTrainAndTestSets) {
@@ -1100,31 +1117,34 @@ public class Npairsj {
 		Path hdfs_out = new Path(Test.hadoopDirectory + "out_npairsj_ser");
 		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
 		
-		// Create a path to store the efficincies
-		Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
-		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
-		FileUtils.deleteQuietly(new File("efficiencies"));
-		
-		// Create 1 mapper for each slave thats only responsbile for the 0th split
-		for (String slave : slaves) {
-			writeStringToFile("0", slave + "/0");
+		boolean efficienciesAvailable = checkIfSlaveEfficienciesAvailable(slaves);
+		if (!efficienciesAvailable) {
+			// Create a path to store the efficincies
+			Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
+			deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
+			FileUtils.deleteQuietly(new File("efficiencies"));
+			
+			// Create 1 mapper for each slave thats only responsbile for the 0th split
+			for (String slave : slaves) {
+				writeStringToFile("0", slave + "/0");
+			}
+			
+			// Copy hadoop input files over to hdfs
+			copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
+			
+			// Execute efficiency testing
+			System.out.println("Starting efficiency testing...");
+			executeHadoop(slaves);
+			System.out.println("relative efficiencies calculated");
+			
+			// Copy the efficines to the local path
+			hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+		} else {
+			System.out.println("Don't need to calculate efficiencies.");
 		}
 		
-		// Copy hadoop input files over to hdfs
-		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
-		
-		// Execute efficiency testing
-		System.out.println("Starting efficiency testing...");
-		executeHadoop(slaves);
-		System.out.println("relative efficiencies calculated");
-		
-		// Copy the efficines to the local path
-		hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
-		
 		// Retrieve relative efficiencies
-		HashMap<String, Double> relativeSlaveEfficiencies = new HashMap<String, Double>();// getRelativeSlaveEfficiencies(slaves);
-		relativeSlaveEfficiencies.put("c165", 0.5);
-		relativeSlaveEfficiencies.put("c153", 0.5);
+		HashMap<String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(slaves);
 		
 		// Determine the number of mappers per machine
 		HashMap<String, Integer> mappersPerHost = new HashMap<String, Integer>();
@@ -1230,12 +1250,9 @@ public class Npairsj {
 				continue;
 			}
 			String j = Test.shortenPath(indexes[i]);
-			System.out.println("HERE");
 			FileInputStream fis = new FileInputStream(
 					"out_npairsj_ser/avgCVScoresTest_" + j);
-			System.out.println("HERE 2");
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			System.out.println("HERE 3");
 
 			try {
 				avgCVScoresTest = avgCVScoresTest.plus((Matrix) ois
