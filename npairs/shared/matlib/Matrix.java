@@ -11,6 +11,8 @@ import npairs.utils.FastQuickSort;
  */
 public abstract class Matrix implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Returns number of rows in this Matrix.
 	 * 

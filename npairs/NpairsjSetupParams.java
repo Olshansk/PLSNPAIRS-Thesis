@@ -41,6 +41,8 @@ import extern.niftijlib.Nifti1Dataset;
  */
 public class NpairsjSetupParams implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	public boolean useQuadCVA = false; // Added by Anita Apr 27 2010.
 	
 	final boolean debug = false;

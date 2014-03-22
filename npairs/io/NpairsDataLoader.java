@@ -29,6 +29,8 @@ import java.io.Serializable;
 
 public class NpairsDataLoader implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+	
 	final boolean debug = false;
 	
 	private Matrix origData;

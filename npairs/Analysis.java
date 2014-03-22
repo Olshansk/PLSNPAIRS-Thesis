@@ -10,6 +10,8 @@ import npairs.utils.*;
 import pls.shared.MLFuncs;
 public class Analysis implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private boolean debug = true; 
 	
 	private NpairsjSetupParams setupParams;
