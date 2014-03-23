@@ -1192,15 +1192,25 @@ public class Npairsj {
 		int currMapper = 0;
 		for (String key : relativeSlaveEfficiencies.keySet()) {
 			double efficiency = relativeSlaveEfficiencies.get(key);
+			System.out.println(key + " efficiency: " + efficiency);
+			
 			int mappers = mappersPerHost.get(key);
+			System.out.println(key + " mappers: " + mappers);
+			
 			double slaveWeight = ((double)mappers) * efficiency;
+			System.out.println(key + " slaveWeight: " + slaveWeight);
 			
 			int samples = (int) Math.round(((double) numSamples) * slaveWeight / totalSlavesWeight);
+			System.out.println(key + " samples: " + samples);
 			
 			double samplesPerMapperDouble = (((double) samples) / ((double) mappers));
+//			System.out.println(key + " samplesPerMapperDouble: " + samplesPerMapperDouble);
 			
 			int samplesPerMapper = (int) samplesPerMapperDouble;
+//			System.out.println(key + " samplesPerMapper: " + samplesPerMapper);
+			
 			int missingSamples = (int) Math.round((samplesPerMapperDouble - samplesPerMapper) * mappers);
+//			System.out.println(key + " missingSamples: " + missingSamples);
 
 			for (int j = 0; j < mappers; j++) {
 				String outString = currSplit + "";

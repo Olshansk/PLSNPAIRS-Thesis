@@ -45,6 +45,7 @@ public class Test {
 	public static Matrix[][] ppAllClasses;  
 	private static Matrix[] r2; 
 	
+	
 	public static String hadoopDirectory = "/user/" + System.getProperty("user.name") + "/";
 	static String localDirectory = System.getProperty("user.dir" );
 	
@@ -741,7 +742,6 @@ public class Test {
   //}
 
   public static void main(String[] args) throws Exception {
-
 	Configuration conf = new Configuration();
 	String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
     
