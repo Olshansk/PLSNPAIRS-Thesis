@@ -86,6 +86,8 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		
 		for (double fraction = 0.1; fraction <= 1; fraction += 0.1) {
 		
+		fraction = Math.round(fraction * 10.0) / 10.0; //round just in case	
+			
 		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked, fraction);
 		
 		File nspFileField = new File(nsp.resultsFilePrefix.trim());
