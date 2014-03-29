@@ -823,7 +823,7 @@ public class Npairsj {
 	 * be present in the same directory from which the jar is executed called
 	 * "slaves".
 	 */
-	public static String[] getListOfSlaves() {
+	public static ArrayList<String> getListOfSlaves() {
 		ArrayList<String> hostArray = new ArrayList<String>();
 		try {
 
@@ -843,7 +843,7 @@ public class Npairsj {
 			System.out.println("Could not find the slaves file in current direcotry.");
 			e.printStackTrace();
 		}
-		return hostArray.toArray(new String[hostArray.size()]);
+		return hostArray;
 	}
 
 	private void createParentDirectoryIfNecessary(File file) {
@@ -861,7 +861,7 @@ public class Npairsj {
 		out.close();
 	}
 
-	private HashMap<String, Double> getRelativeSlaveEfficiencies(String [] slaves) throws IOException, NpairsjException {
+	private HashMap<String, Double> getRelativeSlaveEfficiencies(ArrayList<String> slaves) throws IOException, NpairsjException {
 		HashMap<String, Double> efficiencyMap = new HashMap<String, Double>();
 		HashMap<String, Double> timeMap = new HashMap<String, Double>();
 		double total = 0;
@@ -977,14 +977,14 @@ public class Npairsj {
 	 * @throws Exception
 	 */
 	
-	private void deleteHadoopInputFiles(String [] slaves) {
+	private void deleteHadoopInputFiles(ArrayList<String> slaves) {
 		// Delete any existing directories using for the input files of each slave
 		for (String slave: slaves) {
 			FileUtils.deleteQuietly(new File(slave));
 		}
 	}
 	
-	private void copyHadoopInputFilesToHDFS(FileSystem fs, String [] slaves) throws IOException {
+	private void copyHadoopInputFilesToHDFS(FileSystem fs, ArrayList<String> slaves) throws IOException {
 		Path hdfs = new Path(Test.hadoopDirectory);
 		for (String slave : slaves) {
 			Path hadoop_slave = new Path(Test.hadoopDirectory + slave);
@@ -1004,7 +1004,7 @@ public class Npairsj {
 		fs.mkdirs(path);
 	}
 	
-	private void executeHadoop(String [] slaves) {
+	private void executeHadoop(ArrayList<String> slaves) {
 		ExecutorService service = Executors.newCachedThreadPool();		
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for (final String slave : slaves) {
@@ -1030,7 +1030,7 @@ public class Npairsj {
 	}
 	
 	// Assumes that if the file exists, then it contains good data
-	private boolean checkIfSlaveEfficienciesAvailable(String [] slaves) {
+	private boolean checkIfSlaveEfficienciesAvailable(ArrayList<String> slaves) {
 		File dir = new File("efficiencies");
 		
 		if (!dir.exists()) {
@@ -1110,8 +1110,8 @@ public class Npairsj {
 	    hdfsFileSystem.copyFromLocalFile(false, dataLoader, hdfs);
 		
 		// Get the list and numberof slaves
-		String[] slaves = getListOfSlaves();
-		int numSlaves = slaves.length;
+	    ArrayList<String> slaves = getListOfSlaves();
+		int numSlaves = slaves.size();
 		System.out.println("Number of available slaves: " + numSlaves);
 
 		// Delete old input files if they exist
@@ -1234,7 +1234,7 @@ public class Npairsj {
 					currMapper++;
 					writeStringToFile(outString, key + "/" + Integer.toString(j));
 				}
-			} else {
+			} else if (samples > 0) {
 				for (int j = 0; j < samples; j++) {
 					String outString = currSplit + "";
 					currSplit++;
@@ -1244,7 +1244,8 @@ public class Npairsj {
 					writeStringToFile(outString, key + "/" + Integer.toString(j));
 					
 				}
-				
+			} else {
+				slaves.remove(key);
 			}
 		}
 
