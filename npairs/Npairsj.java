@@ -67,6 +67,8 @@ import java.util.*;
 
 import org.apache.commons.io.*;
 
+import java.math.*;
+
 public class Npairsj {
 
 	boolean debug = false;
@@ -798,8 +800,7 @@ public class Npairsj {
 					System.out.print(host + " " + new String(tmp, 0, i));
 				}
 				if (channel.isClosed()) {
-					System.out.println(host + "exit-status: "
-							+ channel.getExitStatus());
+					System.out.println(host + " exit-status: " + channel.getExitStatus());
 					break;
 				}
 				try {
@@ -870,13 +871,13 @@ public class Npairsj {
 		for (File child : dir.listFiles()) {
 			BufferedReader in = new BufferedReader(new FileReader(child));
 			String host = child.getName();
-			String sTime = in.readLine();
+			String timePerMapper = in.readLine();
 
-			System.out.println(host + " " + sTime);
+			System.out.println(host + " time per mapper: " + timePerMapper);
 
 			double time = -1;
 			try {
-				time = Double.parseDouble(sTime);
+				time = Double.parseDouble(timePerMapper);
 			} catch (NumberFormatException e) {
 				in.close();
 				continue;
@@ -899,7 +900,7 @@ public class Npairsj {
 			System.out.println("Multiple hosts were found");
 			for (String key : timeMap.keySet()) {
 				double fractionTime = timeMap.get(key) / total;
-				double fractionWork = 1.0 - fractionTime; // because less time => faster machine
+				double fractionWork = (1.0 - fractionTime) / 2.0; // because less time => faster machine
 				efficiencyMap.put(key, fractionWork);
 				System.out.println(key + " " + fractionWork);
 			}
@@ -907,6 +908,66 @@ public class Npairsj {
 
 		return efficiencyMap;
 	}
+	
+	private void recalculateEfficiencies(ArrayList<String> slaves) throws IOException, NpairsjException {
+		System.out.println("Beginning efficiency recalculation.");
+		
+		File dirEfficiencies = new File("efficiencies");
+		
+		if (!dirEfficiencies.exists()) {
+			dirEfficiencies.mkdir();
+		}
+		
+		for (String slave: slaves) {
+			double currTimePerSplit = 0;
+			double currAverageCount = 0;
+			
+			File subFile = new File(dirEfficiencies, slave);
+			if (subFile.exists()) {
+				BufferedReader in = new BufferedReader(new FileReader("efficiencies/" + slave));
+				
+				currTimePerSplit = Double.parseDouble(in.readLine());
+				currAverageCount = Double.parseDouble(in.readLine());
+				
+				in.close();
+			}
+			
+			System.out.println("Before " + slave + ": " + currTimePerSplit + " " + currAverageCount);
+			
+			File dir = new File("mapper_times/" + slave);
+			for (File child : dir.listFiles()) {
+				if (child.getName().contains(".crc")) {
+					continue;
+				}
+				try {
+					BufferedReader in = new BufferedReader(new FileReader(child));
+					String str = in.readLine();
+					
+					String [] data = str.split(" ");
+					String [] splits = data[0].split("_");
+					
+					System.out.println("File " + child.getName() + ": " + data[0] + " " + data[1]);
+			    	
+			    	currTimePerSplit *= currAverageCount;
+			    	currTimePerSplit += Double.parseDouble(data[1]);
+			    	currAverageCount += splits.length;
+			    	currTimePerSplit /= currAverageCount;
+			    	
+			    	in.close();
+				} catch (Exception e) {
+			    	// If the file was not correctly formatted, it was probably a .crc or something
+			    }
+			}
+			
+			System.out.println("After " + slave + ": " + currTimePerSplit + " " + currAverageCount);
+			
+		    PrintWriter efficiencyWriter = new PrintWriter(new FileWriter("efficiencies/" + slave));
+		    efficiencyWriter.println(currTimePerSplit);
+		    efficiencyWriter.println(currAverageCount);
+		    efficiencyWriter.close();
+		}
+		System.out.println("Done efficiency recalculation.");
+	}	
 
 	private void removeUselessSlaves(HashMap<String, Double> origMap,int numSamples) {
 		Iterator<Map.Entry<String, Double>> it = origMap.entrySet().iterator();
@@ -1051,6 +1112,22 @@ public class Npairsj {
 		return true;
 	}
 	
+	public static void deleteAndRemakeMapperTimeDirectoriesInFileSystem(FileSystem fs, Path mapperTimesPath, ArrayList<String> slaves) throws IOException{
+		deleteAndRemakeDirectoryInFileSystem(fs, mapperTimesPath);
+
+		for (String slave: slaves) {
+			fs.mkdirs(new Path(mapperTimesPath, slave));
+		}
+	}
+	
+	public static double progressiveRound(double value, int numDecimalPlaces) {
+		BigDecimal bgValue = new BigDecimal(value);
+	    for (int i = bgValue.scale(); i >= numDecimalPlaces; i--) {
+	    	bgValue = bgValue.setScale(i, RoundingMode.HALF_UP);
+	    }
+	    return bgValue.doubleValue();
+	}
+	
 	private void runSplitAnalyses() throws IOException, NpairsjException {
 		int numSamples = splits[0].length; // numSamples ==
 											// min(setupParams.numSplits, max
@@ -1096,18 +1173,11 @@ public class Npairsj {
 		FileSystem hdfsFileSystem = FileSystem.get(new Configuration());
 
 		Npairsj.deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs);
-		
-		Path localSetupParams = new Path("setupParams.ser");
-		hdfsFileSystem.copyFromLocalFile(false, localSetupParams, hdfs);
 
-		Path localSplits = new Path("splits.ser");
-		hdfsFileSystem.copyFromLocalFile(false, localSplits, hdfs);
-
-		Path localfullDataAnalysis = new Path("fullDataAnalysis.ser");
-		hdfsFileSystem.copyFromLocalFile(false, localfullDataAnalysis, hdfs);
-
-	    Path dataLoader = new Path("dataLoader.ser");
-	    hdfsFileSystem.copyFromLocalFile(false, dataLoader, hdfs);
+		hdfsFileSystem.copyFromLocalFile(false, new Path("setupParams.ser"), hdfs);
+		hdfsFileSystem.copyFromLocalFile(false, new Path("splits.ser"), hdfs);
+		hdfsFileSystem.copyFromLocalFile(false, new Path("fullDataAnalysis.ser"), hdfs);
+	    hdfsFileSystem.copyFromLocalFile(false,  new Path("dataLoader.ser"), hdfs);
 		
 		// Get the list and numberof slaves
 	    ArrayList<String> slaves = getListOfSlaves();
@@ -1121,12 +1191,17 @@ public class Npairsj {
 		Path hdfs_out = new Path(Test.hadoopDirectory + "out_npairsj_ser");
 		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
 		
+		// Check if an effiency file is available for all the slaves in this cluster
 		boolean efficienciesAvailable = checkIfSlaveEfficienciesAvailable(slaves);
+
+		Path mapperTimesPath = new Path(Test.hadoopDirectory, "mapper_times");
+		
+		// If not all the nodes already had an existing effieincy file, need to perform effieincy testing
 		if (!efficienciesAvailable) {
-			// Create a path to store the efficincies
-			Path efficienciesPath = new Path(Test.hadoopDirectory, "efficiencies");
-			deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, efficienciesPath);
-			FileUtils.deleteQuietly(new File("efficiencies"));
+			
+			// Delete all existing mapper times files
+			FileUtils.deleteQuietly(new File("mapper_times"));
+			deleteAndRemakeMapperTimeDirectoriesInFileSystem(hdfsFileSystem, mapperTimesPath, slaves);
 			
 			// Create 1 mapper for each slave thats only responsbile for the 0th split
 			for (String slave : slaves) {
@@ -1139,12 +1214,15 @@ public class Npairsj {
 			// Execute efficiency testing
 			System.out.println("Starting efficiency testing...");
 			executeHadoop(slaves);
-			System.out.println("relative efficiencies calculated");
+			System.out.println("Efficiency test complete.");
 			
 			// Copy the efficines to the local path
-			hdfsFileSystem.copyToLocalFile(true, efficienciesPath, local);
+			hdfsFileSystem.copyToLocalFile(true, mapperTimesPath, local);
+			
+			// Used the new mapper times to update the efficiencies
+			recalculateEfficiencies(slaves);
 		} else {
-			System.out.println("Don't need to calculate efficiencies.");
+			System.out.println("Efficiencies already exist.");
 		}
 		
 		// Retrieve relative efficiencies
@@ -1157,7 +1235,7 @@ public class Npairsj {
 			String command = "scp hduser@" + slave + ":/usr/local/hadoop/etc/hadoop/mapred-site.xml " + fileName; 
 			Process p =  Runtime.getRuntime().exec(command);
 			try {
-			p.waitFor();
+				p.waitFor();
 			} catch (InterruptedException e) {
 				System.out.println("Process interrupted while copying mapper file.");
 				System.exit(-1);
@@ -1188,34 +1266,44 @@ public class Npairsj {
 		// Delete the output directory after efficiency test
 		deleteAndRemakeDirectoryInFileSystem(hdfsFileSystem, hdfs_out);
 		
+		//Delete output from previous potential runs
+		FileUtils.deleteQuietly(new File("out_npairsj_ser"));
+		
 		// Delete old input files if they exist
 		deleteHadoopInputFiles(slaves);
 		
 		// Create the hadoop input files for each mapper for each machine using efficinecies and available mappers
 		int currSplit = 0;
 		int currMapper = 0;
+		
+		int numDecimalPlaces = (int)(Math.floor(Math.log10(numSamples - 1)) + 1);
+		System.out.println("Number of decimal places for progressive rounding: " + numDecimalPlaces);
+		
 		for (String key : relativeSlaveEfficiencies.keySet()) {
 			double efficiency = relativeSlaveEfficiencies.get(key);
-//			System.out.println(key + " efficiency: " + efficiency);
+			System.out.println(key + " efficiency: " + efficiency);
 			
 			int mappers = mappersPerHost.get(key);
-//			System.out.println(key + " mappers: " + mappers);
+			System.out.println(key + " mappers: " + mappers);
 			
 			double slaveWeight = ((double)mappers) * efficiency;
-//			System.out.println(key + " slaveWeight: " + slaveWeight);
+			System.out.println(key + " slaveWeight: " + slaveWeight);
 			
-			int samples = (int) Math.round(((double) numSamples) * slaveWeight / totalSlavesWeight);
-//			System.out.println(key + " samples: " + samples);
+			double fractionWork = progressiveRound(slaveWeight / totalSlavesWeight, numDecimalPlaces);
+			System.out.println(key + " fractionWork: " + fractionWork);
+					
+			int samples = (int) Math.round(((double) numSamples) * fractionWork);
+			System.out.println(key + " samples: " + samples);
 			
 			if (samples > mappers) {
 				double samplesPerMapperDouble = (((double) samples) / ((double) mappers));
-	//			System.out.println(key + " samplesPerMapperDouble: " + samplesPerMapperDouble);
+				System.out.println(key + " samplesPerMapperDouble: " + samplesPerMapperDouble);
 				
 				int samplesPerMapper = (int) samplesPerMapperDouble;
-	//			System.out.println(key + " samplesPerMapper: " + samplesPerMapper);
+				System.out.println(key + " samplesPerMapper: " + samplesPerMapper);
 				
 				int missingSamples = (int) Math.round((samplesPerMapperDouble - samplesPerMapper) * mappers);
-	//			System.out.println(key + " missingSamples: " + missingSamples);
+				System.out.println(key + " missingSamples: " + missingSamples);
 				
 				for (int j = 0; j < mappers; j++) {
 					String outString = currSplit + "";
@@ -1249,23 +1337,24 @@ public class Npairsj {
 			}
 		}
 
+		// Delete all existing mapper times files
+		FileUtils.deleteQuietly(new File("mapper_times"));
+		deleteAndRemakeMapperTimeDirectoriesInFileSystem(hdfsFileSystem, mapperTimesPath, slaves);
+		
 		// Copy hadoop input files over to hdfs
 		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
 		
-		//Delete output from previous potential runs
-		FileUtils.deleteQuietly(new File("out_npairsj_ser"));
-		
 		// Execute the hadoop jobs
 		executeHadoop(slaves);
+
+		// Copy the efficines to the local path
+		hdfsFileSystem.copyToLocalFile(true, mapperTimesPath, local);
+		
+		// Use results to update efficiencies
+		recalculateEfficiencies(slaves);
 		
 		// Copy output files from hdfs to local
-		try {
-			hdfsFileSystem.copyToLocalFile(true, hdfs_out, local);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    
-	    hdfsFileSystem.delete(hdfs_out, true);
+		hdfsFileSystem.copyToLocalFile(true, hdfs_out, local);
 	    
 	    // Use generated results to calculate all the NPAIRS values
 		numSlaves = Math.min(numSamples, numMappers);
@@ -1280,7 +1369,7 @@ public class Npairsj {
 		r2_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 
 		for (int i = 0; i < numSlaves; i++) {
-			if (indexes[i].length() == 0) {
+			if (indexes[i] == null || indexes[i].length() == 0) {
 				continue;
 			}
 			String j = Test.shortenPath(indexes[i]);

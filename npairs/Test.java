@@ -1,6 +1,9 @@
 package npairs;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.Security;
 import java.util.StringTokenizer;
@@ -169,6 +172,7 @@ public class Test {
     
 	  String hostName;
 	  long sTime;
+	  String splits;
 	  
     //private final static IntWritable one = new IntWritable(1);
    // private Text word = new Text();
@@ -216,6 +220,7 @@ public class Test {
     	 */
     	
     	String sValue = value.toString().trim();
+    	splits = sValue;
     	System.out.println("sValue: " + sValue);
     	
     	double sTime1 = System.currentTimeMillis();
@@ -654,11 +659,16 @@ public class Test {
     
     public void cleanup(Context context) throws IOException, InterruptedException {
     	long eTime = System.currentTimeMillis();
-    	long tTime = (eTime - sTime) /1000;
-    	String output = "" + tTime;
-    	writeStringToPathInFileSystem(output, new Path(hadoopDirectory + "efficiencies", hostName), FileSystem.get(context.getConfiguration()));
+    	long tTime = (eTime - sTime) / 1000;
     	
-    	System.out.println(hostName + " mapper took " + tTime + " seconds");
+    	Path filePath = new Path(hadoopDirectory + "mapper_times/" + hostName, splits);
+    	FileSystem fs = FileSystem.get(context.getConfiguration());
+    	
+    	PrintWriter pw = new PrintWriter(fs.create(filePath));
+  	  	pw.write(splits + " " + tTime);
+  	  	pw.write(sTime + " " + eTime);
+  	  	pw.flush();
+  	  	pw.close();
     }
  }
   
@@ -669,15 +679,8 @@ public class Test {
 	  os.reset();
 	  os.close();
   }
-  
-  public static void writeStringToPathInFileSystem(String str, Path path, FileSystem fs) throws IOException {
-	  PrintWriter pw = new PrintWriter(fs.create(path));
-	  pw.write(str);
-	  pw.flush();
-	  pw.close();
-  }
-  
-/*
+
+  /*
   
   public static class IntSumReducer 
        extends Reducer<Text,IntWritable,Text,IntWritable> {
@@ -761,9 +764,36 @@ public class Test {
     	hdfsFileSystem.delete(out, true);
     }
     
-    double sTime = System.currentTimeMillis(); 
+    long sTime = System.currentTimeMillis(); 
     job.waitForCompletion(true);
-    double tTime = (System.currentTimeMillis() - sTime) / 1000;
-    System.out.println("hadoop job takes: " + tTime + "seconds...");    
+    long eTime = System.currentTimeMillis();
+    long tTime = (eTime - sTime) / 1000;
+    
+    // Determine the time the first mapper start executing and the time the last mapper finished executing
+    // All the time before the first mapper and after the last mapper should account for the overhead of 
+    // creating these mappers.
+    long min_start = Integer.MAX_VALUE, max_end = 0;
+    File dir = new File("mapper_times/" + InetAddress.getLocalHost().getHostName());
+	for (File child : dir.listFiles()) {
+		BufferedReader in = new BufferedReader(new FileReader(child));
+		in.readLine();
+		String [] data = in.readLine().split(" ");
+		
+		long start = Long.parseLong(data[0]);
+		long end = Long.parseLong(data[1]);
+		
+		if (start < min_start) {
+			min_start = start;
+		}
+		if (max_end < end) {
+			max_end = end;
+		}
+		in.close();
+	}
+	
+	// Determine total overhead
+	long totalOverhead = (min_start - sTime) + (eTime - max_end);
+	System.out.println("mapper overhead: " + totalOverhead);
+    System.out.println("hadoop job takes (seconds): " + tTime);    
   }
 }
