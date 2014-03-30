@@ -1160,6 +1160,10 @@ public class Npairsj {
 														// vol incl. in sample
 														// test data
 
+		long totalOverhead = 0, sTime, eTime;
+		
+		sTime = System.currentTimeMillis();
+		
 		int numAnalyses = 0;
 
 		// Create a reference ot the local and hadoop directory
@@ -1196,6 +1200,9 @@ public class Npairsj {
 
 		Path mapperTimesPath = new Path(Test.hadoopDirectory, "mapper_times");
 		
+		eTime = System.currentTimeMillis();
+		totalOverhead += (eTime - sTime);
+		
 		// If not all the nodes already had an existing effieincy file, need to perform effieincy testing
 		if (!efficienciesAvailable) {
 			
@@ -1224,6 +1231,8 @@ public class Npairsj {
 		} else {
 			System.out.println("Efficiencies already exist.");
 		}
+		
+		sTime = System.currentTimeMillis();
 		
 		// Retrieve relative efficiencies
 		HashMap<String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(slaves);
@@ -1344,9 +1353,14 @@ public class Npairsj {
 		// Copy hadoop input files over to hdfs
 		copyHadoopInputFilesToHDFS(hdfsFileSystem, slaves);
 		
+		eTime = System.currentTimeMillis();
+		totalOverhead += (eTime - sTime);
+		
 		// Execute the hadoop jobs
 		executeHadoop(slaves);
 
+		sTime = System.currentTimeMillis();
+		
 		// Copy the efficines to the local path
 		hdfsFileSystem.copyToLocalFile(true, mapperTimesPath, local);
 		
@@ -1359,6 +1373,11 @@ public class Npairsj {
 	    // Use generated results to calculate all the NPAIRS values
 		numSlaves = Math.min(numSamples, numMappers);
 
+		eTime = System.currentTimeMillis();
+		totalOverhead += (eTime - sTime);
+	    
+		System.out.println("Total overhead (transferring, deleting and serializing data): " + totalOverhead);
+		
 		ppTrueClass_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 		sqrdPredError_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 		predClass_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
