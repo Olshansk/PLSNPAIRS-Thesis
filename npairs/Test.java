@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.Security;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -665,8 +666,8 @@ public class Test {
     	FileSystem fs = FileSystem.get(context.getConfiguration());
     	
     	PrintWriter pw = new PrintWriter(fs.create(filePath));
-  	  	pw.write(splits + " " + tTime);
-  	  	pw.write(sTime + " " + eTime);
+  	  	pw.println(splits + " " + tTime);
+  	  	pw.println(sTime + " " + eTime);
   	  	pw.flush();
   	  	pw.close();
     }
@@ -772,9 +773,20 @@ public class Test {
     // Determine the time the first mapper start executing and the time the last mapper finished executing
     // All the time before the first mapper and after the last mapper should account for the overhead of 
     // creating these mappers.
-    long min_start = Integer.MAX_VALUE, max_end = 0;
-    File dir = new File("mapper_times/" + InetAddress.getLocalHost().getHostName());
-	for (File child : dir.listFiles()) {
+    long min_start = Long.MAX_VALUE, max_end = 0;
+    
+    String host = InetAddress.getLocalHost().getHostName();
+    File localFile = new File(host);
+    
+    FileUtils.deleteQuietly(localFile);
+    
+    hdfsFileSystem.copyToLocalFile(false, new Path(Test.hadoopDirectory, "mapper_times/" + host), new Path(Test.localDirectory));
+	
+	for (File child : localFile.listFiles()) {
+		if (child.getName().contains(".crc")) {
+			continue;
+		}
+		
 		BufferedReader in = new BufferedReader(new FileReader(child));
 		in.readLine();
 		String [] data = in.readLine().split(" ");
@@ -782,7 +794,7 @@ public class Test {
 		long start = Long.parseLong(data[0]);
 		long end = Long.parseLong(data[1]);
 		
-		if (start < min_start) {
+		if (start < min_start && start > sTime) {
 			min_start = start;
 		}
 		if (max_end < end) {
@@ -791,7 +803,10 @@ public class Test {
 		in.close();
 	}
 	
+	FileUtils.deleteQuietly(localFile);
+	
 	// Determine total overhead
+	System.out.println(sTime + " " + eTime + " " + min_start + " " + max_end);
 	long totalOverhead = (min_start - sTime) + (eTime - max_end);
 	System.out.println("mapper overhead: " + totalOverhead);
     System.out.println("hadoop job takes (seconds): " + tTime);    

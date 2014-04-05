@@ -909,6 +909,32 @@ public class Npairsj {
 		return efficiencyMap;
 	}
 	
+	private HashMap<String, Double> getSlaveEfficiencies(ArrayList<String> slaves) throws IOException, NpairsjException {
+		HashMap<String, Double> timeMap = new HashMap<String, Double>();;
+
+		File dir = new File("efficiencies");
+		for (File child : dir.listFiles()) {
+			BufferedReader in = new BufferedReader(new FileReader(child));
+			String host = child.getName();
+			String timePerMapper = in.readLine();
+
+			System.out.println(host + " time per mapper: " + timePerMapper);
+
+			double time = -1;
+			try {
+				time = Double.parseDouble(timePerMapper);
+			} catch (NumberFormatException e) {
+				in.close();
+				continue;
+			}
+			timeMap.put(host, 1.0 / time);
+			in.close();
+		}
+
+		return timeMap;
+	}
+
+	
 	private void recalculateEfficiencies(ArrayList<String> slaves) throws IOException, NpairsjException {
 		System.out.println("Beginning efficiency recalculation.");
 		
@@ -1128,6 +1154,14 @@ public class Npairsj {
 	    return bgValue.doubleValue();
 	}
 	
+	private String appendSplit(String input, int currSplit, int numSamples) {
+		if (currSplit >= numSamples) {
+			System.out.println("Tried to add extra split num: " + currSplit);
+			return input;
+		}
+		return input + "_" + Integer.toString(currSplit);
+	}
+	
 	private void runSplitAnalyses() throws IOException, NpairsjException {
 		int numSamples = splits[0].length; // numSamples ==
 											// min(setupParams.numSplits, max
@@ -1235,7 +1269,7 @@ public class Npairsj {
 		sTime = System.currentTimeMillis();
 		
 		// Retrieve relative efficiencies
-		HashMap<String, Double> relativeSlaveEfficiencies = getRelativeSlaveEfficiencies(slaves);
+		HashMap<String, Double> slaveEfficiencies = getSlaveEfficiencies(slaves);
 		
 		// Determine the number of mappers per machine
 		HashMap<String, Integer> mappersPerHost = new HashMap<String, Integer>();
@@ -1268,7 +1302,7 @@ public class Npairsj {
 		// Determine the total slave weight
 		double totalSlavesWeight = 0;
 		for (String key : mappersPerHost.keySet()) {
-			totalSlavesWeight += ((double)mappersPerHost.get(key)) * relativeSlaveEfficiencies.get(key) ;
+			totalSlavesWeight += ((double)mappersPerHost.get(key)) * slaveEfficiencies.get(key) ;
 		}
 		System.out.println("Total slaves weight: " + totalSlavesWeight);
 
@@ -1288,8 +1322,13 @@ public class Npairsj {
 		int numDecimalPlaces = (int)(Math.floor(Math.log10(numSamples - 1)) + 1);
 		System.out.println("Number of decimal places for progressive rounding: " + numDecimalPlaces);
 		
-		for (String key : relativeSlaveEfficiencies.keySet()) {
-			double efficiency = relativeSlaveEfficiencies.get(key);
+		int keyCount = 0;
+		
+		for (String key : slaveEfficiencies.keySet()) {
+			
+			keyCount++;
+			
+			double efficiency = slaveEfficiencies.get(key);
 			System.out.println(key + " efficiency: " + efficiency);
 			
 			int mappers = mappersPerHost.get(key);
@@ -1304,45 +1343,65 @@ public class Npairsj {
 			int samples = (int) Math.round(((double) numSamples) * fractionWork);
 			System.out.println(key + " samples: " + samples);
 			
-			if (samples > mappers) {
-				double samplesPerMapperDouble = (((double) samples) / ((double) mappers));
-				System.out.println(key + " samplesPerMapperDouble: " + samplesPerMapperDouble);
-				
-				int samplesPerMapper = (int) samplesPerMapperDouble;
-				System.out.println(key + " samplesPerMapper: " + samplesPerMapper);
-				
-				int missingSamples = (int) Math.round((samplesPerMapperDouble - samplesPerMapper) * mappers);
-				System.out.println(key + " missingSamples: " + missingSamples);
-				
-				for (int j = 0; j < mappers; j++) {
-					String outString = currSplit + "";
-					currSplit++;
-					for (int k = 1; k < samplesPerMapper; k++) {
-						outString = outString + "_" + Integer.toString(currSplit);
-						currSplit++;
-					}
-					if (missingSamples > 0) {
-						outString = outString + "_" + Integer.toString(currSplit);
-						currSplit++;
-						missingSamples--;
-					}
-					System.out.println("Slave: " + key + " Mapper: " + j + " Splits: " + outString);
-					indexes[currMapper] = outString;
-					currMapper++;
-					writeStringToFile(outString, key + "/" + Integer.toString(j));
-				}
-			} else if (samples > 0) {
-				for (int j = 0; j < samples; j++) {
-					String outString = currSplit + "";
-					currSplit++;
-					System.out.println("Slave: " + key + " Mapper: " + j + " Splits: " + outString);
-					indexes[currMapper] = outString;
-					currMapper++;
-					writeStringToFile(outString, key + "/" + Integer.toString(j));
-					
-				}
-			} else {
+			if(samples == 0) {
 				slaves.remove(key);
+			} else {
+				if (samples > mappers) {
+					double samplesPerMapperDouble = (((double) samples) / ((double) mappers));
+					System.out.println(key + " samplesPerMapperDouble: " + samplesPerMapperDouble);
+					
+					int samplesPerMapper = (int) samplesPerMapperDouble;
+					System.out.println(key + " samplesPerMapper: " + samplesPerMapper);
+					
+					int missingSamples = (int) Math.round((samplesPerMapperDouble - samplesPerMapper) * mappers);
+					System.out.println(key + " missingSamples: " + missingSamples);
+					
+					for (int j = 0; j < mappers; j++) {
+						String outString = currSplit + "";
+						currSplit++;
+						for (int k = 1; k < samplesPerMapper; k++) {
+							outString = appendSplit(outString, currSplit, numSamples);
+							currSplit++;
+						}
+						if (missingSamples > 0) {
+							outString = appendSplit(outString, currSplit, numSamples);
+							currSplit++;
+							missingSamples--;
+						}
+						
+						if (keyCount == slaveEfficiencies.size() && j == (mappers - 1)) {
+							while (currSplit <= (numSamples - 1)) {
+								System.out.println("Missed split num: " + currSplit);
+								outString = appendSplit(outString, currSplit, numSamples);
+								currSplit++;
+							}
+						}
+						
+						System.out.println("Slave: " + key + " Mapper: " + j + " Splits: " + outString);
+						indexes[currMapper] = outString;
+						currMapper++;
+						
+						writeStringToFile(outString, key + "/" + Integer.toString(j));
+					}
+				} else {
+					for (int j = 0; j < samples; j++) {
+						String outString = currSplit + "";
+						currSplit++;
+						
+						if (keyCount == slaveEfficiencies.size() && j == (samples - 1)) {
+							while (currSplit <= (numSamples - 1)) {
+								System.out.println("Missed split num: " + currSplit);
+								outString = appendSplit(outString, currSplit, numSamples);
+								currSplit++;
+							}
+						}
+						
+						System.out.println("Slave: " + key + " Mapper: " + j + " Splits: " + outString);
+						indexes[currMapper] = outString;
+						currMapper++;
+						writeStringToFile(outString, key + "/" + Integer.toString(j));
+					}
+				}
 			}
 		}
 
@@ -1372,11 +1431,6 @@ public class Npairsj {
 	    
 	    // Use generated results to calculate all the NPAIRS values
 		numSlaves = Math.min(numSamples, numMappers);
-
-		eTime = System.currentTimeMillis();
-		totalOverhead += (eTime - sTime);
-	    
-		System.out.println("Total overhead (transferring, deleting and serializing data): " + totalOverhead);
 		
 		ppTrueClass_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
 		sqrdPredError_temp = new Matrix[numSlaves][totalNumSplitAnalyses];
@@ -1586,6 +1640,11 @@ public class Npairsj {
 			ois13.close();
 		}
 
+		eTime = System.currentTimeMillis();
+		totalOverhead += (eTime - sTime);
+	    
+		System.out.println("Total overhead (transferring, deleting and serializing data): " + totalOverhead);
+		
 		avgSpatialPattern = avgSpatialPattern
 				.mult(1.0 / (double) (numSamples * 2));
 		avgZScorePattern = avgZScorePattern.mult(1.0 / (double) numSamples);

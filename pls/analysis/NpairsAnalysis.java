@@ -84,11 +84,12 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		
 		progress.startTask(setupFileIDMessage, "All tasks");
 		
-		for (double fraction = 0.1; fraction <= 1; fraction += 0.1) {
+		for (double fraction = 1.0; fraction >= 0.1; fraction -= 0.1) {
 		
 		fraction = Math.round(fraction * 10.0) / 10.0; //round just in case	
-			
-		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked, fraction);
+		NpairsjSetupParams.fraction = fraction;	
+		
+		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked);
 		
 		File nspFileField = new File(nsp.resultsFilePrefix.trim());
 		File resultsDir = nspFileField.getParentFile();
