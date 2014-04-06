@@ -662,7 +662,7 @@ public class Test {
     	long eTime = System.currentTimeMillis();
     	long tTime = (eTime - sTime) / 1000;
     	
-    	Path filePath = new Path(hadoopDirectory + "mapper_times/" + hostName, splits);
+    	Path filePath = new Path(hadoopDirectory + "mapper_times/" + hostName, shortenPath(splits));
     	FileSystem fs = FileSystem.get(context.getConfiguration());
     	
     	PrintWriter pw = new PrintWriter(fs.create(filePath));
