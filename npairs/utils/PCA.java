@@ -14,6 +14,8 @@ import npairs.Npairsj;
 import npairs.NpairsjException;
 import npairs.NpairsjSetupParams;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /** Performs Principal Component Analysis (PCA).
  * 
  * <p>PCA produces a representation of input data as a linear combination of orthonormal
@@ -103,6 +105,7 @@ public class PCA implements Serializable {
 		                                // into it.  
 		private PrintStream logStream = null; // where to log info; null if no logging to be done
 		
+		private static ReentrantLock gpuLock = new ReentrantLock();
 		
 	/** Constructor for PCA object. Calculates PCA of input Matrix via eigenvalue decomposition.
 	 * 
@@ -235,10 +238,10 @@ public class PCA implements Serializable {
 	      
 
 
-	      
+	      gpuLock.lock();
 	      this.runTest(M.toRowPacked1DArray(), nRows, nCols, pca_temp, evec_temp,
 	          eigenvalues);
-
+	      gpuLock.unlock();
 	     
 
 	      for (int i = 0; i < nRows; i++)

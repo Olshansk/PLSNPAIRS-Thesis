@@ -1,6 +1,7 @@
 package npairs;
 
 import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
 
 import npairs.shared.matlib.*;
 import npairs.utils.*;
@@ -105,7 +106,7 @@ public class Analysis implements Serializable{
 	 * methods:
 	 *****************************/
 
-	public void run() throws NpairsjException {
+	public void run(CountDownLatch countDownLatch) throws NpairsjException {
 		
 		Matrix pcaEvects = null; // required in case results need to be transformed 
 						         // back to orig space from pca space, i.e. if cva 
@@ -201,6 +202,10 @@ public class Analysis implements Serializable{
 				double tTime = (System.currentTimeMillis() - sTime) / 1000;
 				Npairsj.output.println("[" + tTime + " s] (Match to ref)");			
 			}
+		}
+		
+		if (countDownLatch != null) {
+			countDownLatch.countDown();
 		}
 
 	} // end method run()

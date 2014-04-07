@@ -527,7 +527,7 @@ public class Npairsj {
 			fullDataAnalysis = new Analysis(dataLoader.getOrigData(),
 					setupParams);
 
-		fullDataAnalysis.run();
+		fullDataAnalysis.run(null);
 
 		fullDataPCA = fullDataAnalysis.getPCA(); // null if pca not run
 		fullDataCVA = fullDataAnalysis.getCVA(); // null if cva not run

@@ -23,6 +23,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.net.*;
 import org.apache.hadoop.fs.*;
@@ -325,59 +326,48 @@ public class Test {
 
         	int splitNum = Integer.parseInt(i);
 
-            Analysis firstPartAnalysis = null;
-    		Analysis secondPartAnalysis = null;
-
     		int[] split1DataVols = splits[0][splitNum];
     		int[] split2DataVols = splits[1][splitNum];
-    		
+    		      
     		double start = System.currentTimeMillis();
     		
-    		if (setupParams.initFeatSelect) {
-    			firstPartAnalysis = 
-    				new Analysis(dataLoader.getFeatSelData(), setupParams, 
-    						split1DataVols, true, fullDataAnalysis);
-    			if (setupParams.switchTrainAndTestSets) {
-    				secondPartAnalysis = 
-    					new Analysis(dataLoader.getFeatSelData(), setupParams, 
-    							split2DataVols, false, fullDataAnalysis);
-    			}
-    		}
-    		else {
-    			firstPartAnalysis = 
-    				new Analysis(dataLoader.getOrigData(), setupParams, 
-    						split1DataVols, true, fullDataAnalysis);
-    			if (setupParams.switchTrainAndTestSets) {
-    				secondPartAnalysis =
-    					new Analysis(dataLoader.getOrigData(), setupParams, 
-    							split2DataVols, false, fullDataAnalysis);
-    			}
-    		}
-    		
+        	final Analysis firstPartAnalysis = setupParams.initFeatSelect ?
+        						new Analysis(dataLoader.getFeatSelData(), setupParams, split1DataVols, true, fullDataAnalysis) :
+        						new Analysis(dataLoader.getOrigData(), setupParams, split1DataVols, true, fullDataAnalysis);
+        	final Analysis secondPartAnalysis = !setupParams.switchTrainAndTestSets ? null :
+        										(setupParams.initFeatSelect ?
+        												new Analysis(dataLoader.getFeatSelData(), setupParams, split2DataVols, false, fullDataAnalysis) :
+        												new Analysis(dataLoader.getOrigData(), setupParams, split2DataVols, false, fullDataAnalysis));
+        	
     	    System.out.println("firstPartAnalysis: " +  (System.currentTimeMillis() - start) / 1000 + " seconds");   
     	    System.out.println("");
     		
-    		try {
-    			firstPartAnalysis.run();
-    		} catch (NpairsjException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    		
-    		++numAnalyses;
+    	    final CountDownLatch countDownLatch = new CountDownLatch(setupParams.switchTrainAndTestSets ? 2 : 1);
 
-    		start = System.currentTimeMillis();
+    	    new Thread(new Runnable() {	
+    	    	public void run() {
+    	    		try {
+    	    			firstPartAnalysis.run(countDownLatch);
+    	    		} catch (NpairsjException e) {
+    	    			e.printStackTrace();
+    	    		}
+    	    	}
+    	    }).start();
     		
     		if (setupParams.switchTrainAndTestSets) {
-
-    			try {
-    				secondPartAnalysis.run();
-    			} catch (NpairsjException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
-    			}
-    			++numAnalyses;
+    			new Thread(new Runnable() {	
+        	    	public void run() {
+        	    		try {
+        	    			secondPartAnalysis.run(countDownLatch);
+        	    		} catch (NpairsjException e) {
+        	    			e.printStackTrace();
+        	    		}
+        	    	}
+        	    }).start();
     		}
+    		
+    		countDownLatch.await();
+    		numAnalyses += (setupParams.switchTrainAndTestSets ? 2 : 1);
     		
     	    System.out.println("if (setupParams.switchTrainAndTestSets) : " + (System.currentTimeMillis() - start) / 1000 + " seconds");
     	    System.out.println("");
