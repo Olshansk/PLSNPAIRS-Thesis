@@ -322,8 +322,8 @@ public class Npairsj {
 	// initialized in NpairsjSetupParams.initLogFile()
 
 	// The calculate (p,r) values acquired when NPAIRS is finished running 
-	public double predictability = -1;
-	public double reproducibility = -1;
+	private double predictability = -1;
+	private double reproducibility = -1;
 	
 	/**************************************************************************************/
 
@@ -2522,5 +2522,13 @@ public class Npairsj {
 		in.close();
 		
 		return reproducibility;
+	}
+	
+	public double getReproducibility() {
+		return reproducibility;
+	}
+	
+	public double getPredictability() {
+		return predictability;
 	}
 }

@@ -84,10 +84,13 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		
 		progress.startTask(setupFileIDMessage, "All tasks");
 		
-		for (double fraction = 1.0; fraction >= 0.1; fraction -= 0.1) {
+		double[] fractions = new double[] {0.4, 1.0}; // The first fraction is acquired from the fractional tests, the second is for a complete execution
+		int[] qGradientDescentJumps = new int[] {50, -25, 10, -5}; // Can be modified. These values were determined according to observations to previous patterns
+		int bestQ = -1;
 		
-		fraction = Math.round(fraction * 10.0) / 10.0; //round just in case	
-		NpairsjSetupParams.fraction = fraction;	
+		for (int fractionIndex = 0; fractionIndex < fractions.length; fractionIndex++) {
+			
+		NpairsjSetupParams.fraction = fractions[fractionIndex];	
 		
 		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked);
 		
@@ -124,9 +127,9 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		}
 		
 		else {
-
+	
 			loadEVD = nsp.loadEVD;
-
+	
 			if (evdOnly) {
 				if (!loadEVD){
 					progress.postMessage(evdOnlyMessage);
@@ -240,26 +243,35 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 			} 
 
 			int firstAnalysisIdx = 0;
+			
 			int lastAnalysisIdx = numNPAIRS - 1;
 			if (analysisNum > 0) { // just run the analysisNum'th analysis
 				firstAnalysisIdx = analysisNum - 1;
 				lastAnalysisIdx = analysisNum - 1;
 			}
 			long start=System.currentTimeMillis();
-
-//			int [] qArray = new int [] {1, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400};
-			int [] qArray = new int [] {1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400};
 			
-			firstAnalysisIdx = qArray[0];
-			lastAnalysisIdx = qArray[qArray.length - 1];
+			int currentQ = 1;
+			int currentGradientDescentJumpIndex = 0;
 			
-			for (int qIdx = 0; qIdx < qArray.length; qIdx++) {
-				int i = qArray[qIdx];
+			double lastR = -1;
+			double lastP = -1;
+			
+			firstAnalysisIdx = 1; // Always start at 1
+			lastAnalysisIdx = 500; // Never need to go above 500
+			
+			while(true) {
+				
+				int i = currentQ;
+				
+				// Fractional testing is done, need to run experiment at best Q.
+				if (fractionIndex == fractions.length - 1) {
+					i = bestQ;
+				}
 			
 				if (numNPAIRS > 1) {
 					String runMsg = "Running analysis # " + (i + 1) + "... ";
-					progress.startTask(runMsg, 
-							"Analysis # " + (i + 1));
+					progress.startTask(runMsg, "Analysis # " + (i + 1));
 					Npairsj.output.println(runMsg);
 				}
 
@@ -349,9 +361,31 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 					progress.postMessage("Done [" + tTime + "s]\n");
 					Npairsj.output.println("Done [" + tTime + "s]");
 
-					
-					//Alan:
 					npairsj = null;
+
+					// Completed full test at best Q
+					if (fractionIndex == fractions.length - 1) {
+						break;
+					}
+					
+					double currP = npairsj.getPredictability();
+					double currR = npairsj.getReproducibility();
+					
+					double lastDistance = distanceFromPerfectPR(lastP, lastR);
+					double currDistance = distanceFromPerfectPR(currP, currR);
+					
+					if (currDistance > lastDistance) {
+						currentGradientDescentJumpIndex++;
+						if (currentGradientDescentJumpIndex >= qGradientDescentJumps.length) {
+							break;
+						}
+					}
+					
+					currentQ += qGradientDescentJumps[currentGradientDescentJumpIndex];
+					
+					lastR = currR; 
+					lastP = currP;
+
 				}
 				catch (NpairsjException npe) {
 					progress.printError(npe.getMessage());
@@ -398,5 +432,9 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 //		
 //		super.finalize();
 //	}
+    
+    public static double distanceFromPerfectPR(double p, double r) {
+    	return Math.sqrt((1.0 - p) * (1.0 - p) + (1.0 - r) * (1.0 - r)); 
+    }
 	
 }
