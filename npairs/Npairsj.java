@@ -1385,6 +1385,11 @@ public class Npairsj {
 					}
 				} else {
 					for (int j = 0; j < samples; j++) {
+						
+						if (currSplit > numSamples) {
+							break;
+						}
+						
 						String outString = currSplit + "";
 						currSplit++;
 						
