@@ -84,11 +84,6 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 		
 		progress.startTask(setupFileIDMessage, "All tasks");
 		
-		for (double fraction = 1.0; fraction >= 0.1; fraction -= 0.1) {
-		
-		fraction = Math.round(fraction * 10.0) / 10.0; //round just in case	
-		NpairsjSetupParams.fraction = fraction;	
-		
 		NpairsjSetupParams nsp = new NpairsjSetupParams(npairsSetupParamsMatFileName, !isBlocked);
 		
 		File nspFileField = new File(nsp.resultsFilePrefix.trim());
@@ -246,15 +241,8 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 				lastAnalysisIdx = analysisNum - 1;
 			}
 			long start=System.currentTimeMillis();
-
-//			int [] qArray = new int [] {1, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400};
-			int [] qArray = new int [] {1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400};
 			
-			firstAnalysisIdx = qArray[0];
-			lastAnalysisIdx = qArray[qArray.length - 1];
-			
-			for (int qIdx = 0; qIdx < qArray.length; qIdx++) {
-				int i = qArray[qIdx];
+			for (int i = firstAnalysisIdx; i <= lastAnalysisIdx; ++i) {
 			
 				if (numNPAIRS > 1) {
 					String runMsg = "Running analysis # " + (i + 1) + "... ";
@@ -372,7 +360,7 @@ public class NpairsAnalysis extends ProgressDialogWatcher {
 			//Alan
 			System.gc();
 		}
-		}
+		
 		progress.endTask();
 		progress.complete();
 	}
