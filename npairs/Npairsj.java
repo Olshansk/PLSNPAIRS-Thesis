@@ -1097,7 +1097,7 @@ public class Npairsj {
 		for (final String slave : slaves) {
 			Runnable runnable = new Runnable() {
 				public void run() {
-					sshExecute(slave, "hduser", "cd /home/hduser/NPAIRS_Files/NPAIRS/; /usr/local/hadoop/bin/hadoop jar npairs_hadoop.jar "+ slave + " out_" + slave);
+					sshExecute(slave, "hduser", "/usr/local/hadoop/bin/hadoop jar /home/hduser/npairs_hadoop.jar "+ slave + " out_" + slave);
 				}
 			};
 			futures.add((Future<?>) service.submit(runnable));
